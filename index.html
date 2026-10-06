@@ -3,23 +3,790 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ANU</title>
-<meta name="theme-color" content="#FBE3E8">
-<meta name="description" content="ANU — my private little corner.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FCE4EA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ANU">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<link rel="icon" type="image/png" href="./icon-192.png">
-<link rel="stylesheet" href="./styles.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>ANU</title>
+
+<style>
+/* =========================================================
+   ANU design system
+   Shared tokens. Each mini-app can override --tint / --accent.
+   ========================================================= */
+:root {
+  --cream: #FFF8F3;
+  --blush: #FCE4EA;
+  --pale: #FFF0F4;
+  --rose: #D96B8C;
+  --rose-deep: #B5476A;
+  --ink: #4A2F38;
+  --muted: #94727E;
+  --line: rgba(181, 71, 106, .14);
+  --shadow: 0 10px 26px -10px rgba(181, 71, 106, .30), 0 2px 6px rgba(181, 71, 106, .08);
+  --serif: ui-serif, "New York", Georgia, "Times New Roman", serif;
+  --round: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--cream); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--round);
+  color: var(--ink);
+  background: transparent;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; border-radius: 12px; }
+
+/* ---------- Background ---------- */
+.bg {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden;
+  background:
+    radial-gradient(120% 55% at 0% 0%, var(--blush) 0%, rgba(252,228,234,0) 62%),
+    radial-gradient(110% 50% at 100% 100%, #F8D2DE 0%, rgba(248,210,222,0) 62%),
+    var(--cream);
+}
+.flower { position: absolute; }
+.flower.f1 { top: -70px; right: -85px; width: 290px; color: #F4A9C0; opacity: .34; transform: rotate(12deg); }
+.flower.f2 { bottom: -100px; left: -95px; width: 310px; color: #F7C3D3; opacity: .30; transform: rotate(-8deg); }
+
+/* ---------- Screens ---------- */
+.screen { animation: enter .24s ease both; }
+@keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Home ---------- */
+.home {
+  max-width: 520px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 48px) 22px calc(env(safe-area-inset-bottom, 0px) + 24px);
+}
+.greeting {
+  margin: 0 0 30px;
+  font: 500 clamp(34px, 10.5vw, 46px)/1.08 var(--serif);
+  letter-spacing: -.012em;
+  text-wrap: balance;
+}
+.greeting .em { font-size: .78em; margin-left: .12em; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.card {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 22px;
+  min-height: 164px; padding: 18px;
+  border-radius: 26px;
+  background: var(--tint, var(--pale));
+  border: 1px solid rgba(255, 255, 255, .75);
+  box-shadow: var(--shadow);
+  color: var(--ink); text-decoration: none;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.card:active { transform: scale(.97); }
+.card .ico {
+  width: 54px; height: 54px; display: grid; place-items: center;
+  border-radius: var(--ico-radius, 18px);
+  background: rgba(255, 255, 255, .78);
+  font-size: 28px; line-height: 1;
+}
+.card .name { font: 600 17px/1.22 var(--round); text-wrap: balance; }
+
+.foot { margin-top: 34px; text-align: center; }
+.linkbtn {
+  min-height: 44px; padding: 10px 16px; border: 0; background: transparent;
+  font: 500 14px/1 var(--round); color: var(--muted); cursor: pointer; border-radius: 14px;
+}
+
+/* ---------- Mini-app screen shell ---------- */
+.app {
+  max-width: 520px; margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 20px calc(env(safe-area-inset-bottom, 0px) + 28px);
+  min-height: 100vh; min-height: 100dvh;
+}
+.bar { display: flex; align-items: center; gap: 12px; min-height: 56px; margin-bottom: 14px; }
+.back {
+  flex: none; width: 44px; height: 44px; display: grid; place-items: center;
+  border-radius: 50%; background: rgba(255, 255, 255, .8);
+  box-shadow: var(--shadow); color: var(--rose-deep); text-decoration: none;
+}
+.bar h1 { margin: 0; font: 500 27px/1.1 var(--serif); letter-spacing: -.01em; }
+.note {
+  margin-top: 40px; padding: 26px 22px; text-align: center;
+  background: rgba(255, 255, 255, .72); border-radius: 26px; box-shadow: var(--shadow);
+}
+.note .big { font-size: 40px; }
+.note p { margin: 10px 0 0; color: var(--muted); font-size: 16px; line-height: 1.45; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  min-height: 52px; padding: 14px 18px; border: 0; border-radius: 18px;
+  font: 600 17px/1 var(--round); cursor: pointer;
+  background: var(--rose-deep); color: #fff;
+}
+.btn.ghost { background: var(--pale); color: var(--rose-deep); border: 1px solid var(--line); }
+.btn:active { transform: scale(.98); }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+
+/* ---------- Bottom sheet + toast ---------- */
+dialog#sheet {
+  position: fixed; inset: auto 0 0 0; margin: 0 auto; padding: 0; border: 0;
+  width: min(520px, 100%); max-width: 100%;
+  border-radius: 28px 28px 0 0; background: var(--cream); color: var(--ink);
+  box-shadow: 0 -12px 40px rgba(181, 71, 106, .22);
+}
+dialog#sheet::backdrop { background: rgba(74, 47, 56, .32); }
+dialog#sheet[open] { animation: rise .22s ease both; }
+@keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet-in { padding: 26px 22px calc(env(safe-area-inset-bottom, 0px) + 22px); display: grid; gap: 12px; }
+.sheet-in h2 { margin: 0; font: 500 24px/1.15 var(--serif); }
+.sheet-in p { margin: 0 0 6px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+
+#toast {
+  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+  transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
+  padding: 12px 18px; border-radius: 999px; background: var(--ink); color: #fff;
+  font: 500 15px/1.2 var(--round); max-width: calc(100% - 40px); text-align: center;
+  transition: opacity .2s ease, transform .2s ease; z-index: 50;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, dialog#sheet[open] { animation: none; }
+  .card, .btn { transition: none; }
+}
+
+/* ---------- Kaasu ---------- */
+.kaasu-toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+.seg {
+  flex: 1; min-height: 40px; border: 1px solid var(--line); background: #fff;
+  border-radius: 14px; font: 600 14px/1 var(--round); color: var(--muted);
+}
+.seg.active { background: var(--rose-deep); color: #fff; border-color: var(--rose-deep); }
+
+.kaasu-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font: 600 17px/1 var(--round); }
+.navbtn { width: 40px; height: 40px; border: 0; background: rgba(255, 255, 255, .85); border-radius: 50%; font-size: 19px; color: var(--rose-deep); box-shadow: var(--shadow); }
+
+.kaasu-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
+.dow { text-align: center; font: 600 12px/1 var(--round); color: var(--muted); padding: 2px 0 8px; }
+.day { aspect-ratio: 1; border: 0; border-radius: 13px; background: #fff; font: 600 15px/1 var(--round); color: var(--ink); box-shadow: 0 2px 6px rgba(181, 71, 106, .08); }
+.day.today { background: var(--rose-deep); color: #fff; }
+.day.empty { background: transparent; box-shadow: none; }
+
+.kaasu-summary { background: rgba(255, 255, 255, .72); border-radius: 22px; padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.kaasu-summary h3 { margin: 0 0 8px; font: 500 18px/1.2 var(--serif); }
+.summary-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; font-size: 15px; border-top: 1px solid var(--line); }
+.summary-row:first-of-type { border-top: 0; }
+.summary-row.total { margin-top: 2px; padding-top: 13px; border-top: 1px solid var(--line); font-weight: 700; color: var(--rose-deep); }
+
+.kaasu-sticky { position: relative; background: #FFF4D9; border-radius: 4px; padding: 20px 16px 16px; box-shadow: 0 6px 16px rgba(0, 0, 0, .08); transform: rotate(-1deg); }
+.kaasu-sticky .pin { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); font-size: 20px; }
+.sticky-text { width: 100%; min-height: 86px; border: 0; background: transparent; resize: vertical; font: 15px/1.5 var(--round); color: #7A5C1E; }
+.sticky-text:focus { outline: none; }
+.sticky-text::placeholder { color: #B89A52; }
+
+.kaasu-week-list { display: grid; gap: 10px; }
+.week-row { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 52px; padding: 0 18px; border: 0; border-radius: 16px; background: #fff; box-shadow: 0 2px 6px rgba(181, 71, 106, .08); font: 500 15px/1 var(--round); color: var(--ink); }
+.wd-amt { color: var(--muted); }
+
+.kaasu-year-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.year-month { min-height: 64px; border: 0; border-radius: 16px; background: #fff; box-shadow: 0 2px 6px rgba(181, 71, 106, .08); font: 600 16px/1 var(--round); color: var(--ink); }
+
+.back-link { border: 0; background: transparent; color: var(--rose-deep); font: 600 15px/1 var(--round); padding: 6px 0; margin: 0 0 8px; }
+.day-title { font: 500 21px/1.2 var(--serif); margin-bottom: 16px; text-wrap: balance; }
+
+.col-list { display: grid; gap: 10px; margin-bottom: 14px; }
+.col-row { background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 2px 6px rgba(181, 71, 106, .08); }
+.col-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.col-num { width: 22px; height: 22px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--pale); color: var(--rose-deep); font: 700 12px/1 var(--round); }
+.col-name { flex: 1; font: 600 16px/1.2 var(--round); }
+.edit-btn { width: 32px; height: 32px; flex: none; border: 0; background: var(--pale); border-radius: 10px; color: var(--rose-deep); font-size: 14px; }
+.col-fields { display: flex; align-items: center; gap: 12px; }
+.col-input-wrap { flex: 1; display: flex; align-items: center; gap: 3px; background: var(--pale); border-radius: 12px; padding: 0 12px; min-height: 44px; }
+.col-input-wrap .unit { color: var(--muted); font-size: 15px; }
+.col-input { flex: 1; width: 100%; min-width: 0; border: 0; background: transparent; min-height: 44px; font: 600 16px/1 var(--round); color: var(--ink); }
+.col-input:focus { outline: none; }
+.col-balance { min-width: 84px; text-align: right; font: 700 16px/1 var(--round); color: var(--rose-deep); }
+.col-balance.neg { color: #C23B3B; }
+
+.savings-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, .72); border-radius: 16px; padding: 14px 18px; font: 600 16px/1 var(--round); box-shadow: var(--shadow); margin-bottom: 18px; }
+.savings-row .neg { color: #C23B3B; }
+
+.field-label { display: block; font: 500 14px/1.4 var(--round); color: var(--muted); }
+.field-label input { display: block; width: 100%; min-height: 46px; margin-top: 6px; padding: 0 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; font: 16px/1 var(--round); color: var(--ink); }
+.field-label input:focus { outline: none; border-color: var(--rose); }
+</style>
 </head>
+
 <body>
-<div id="app" aria-live="polite"></div>
-<div id="shield" hidden><div><span>🌸</span><p>ANU</p></div></div>
-<noscript><p style="padding:24px;font-family:sans-serif">ANU needs JavaScript to run.</p></noscript>
-<script type="module" src="./main.js"></script>
+
+<!-- Decorative background -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flower" viewBox="-100 -100 200 200">
+    <g fill="currentColor">
+      <ellipse cx="0" cy="-52" rx="28" ry="46"/>
+      <ellipse cx="0" cy="-52" rx="28" ry="46" transform="rotate(60)"/>
+      <ellipse cx="0" cy="-52" rx="28" ry="46" transform="rotate(120)"/>
+      <ellipse cx="0" cy="-52" rx="28" ry="46" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-52" rx="28" ry="46" transform="rotate(240)"/>
+      <ellipse cx="0" cy="-52" rx="28" ry="46" transform="rotate(300)"/>
+    </g>
+    <circle r="24" fill="#FFF8F3"/>
+  </symbol>
+</svg>
+<div class="bg" aria-hidden="true">
+  <svg class="flower f1" viewBox="-100 -100 200 200"><use href="#flower"/></svg>
+  <svg class="flower f2" viewBox="-100 -100 200 200"><use href="#flower"/></svg>
+</div>
+
+<main id="root"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="sheet"></dialog>
+
+
+<!-- =========================================================
+     CORE  (shared by every mini-app; don't put mini-app code here)
+     ========================================================= -->
+<script>
+'use strict';
+
+const OWNER = 'Anu';
+const APPS = [];                       // filled by registerApp()
+const $ = (sel, el = document) => el.querySelector(sel);
+
+/**
+ * Register a mini-app. This is the ONLY thing a new mini-app needs to do.
+ *   id      short url-safe name          'kaasu'
+ *   name    label on the home card       'Kaasu'
+ *   icon    emoji on the home card       '💰'
+ *   tint    card background colour
+ *   stores  database tables it uses      ['kaasu_transactions']
+ *   mount   (el, ctx) => void            draws the mini-app into el
+ *           (omit it and a "coming soon" screen is shown)
+ */
+function registerApp(app) { APPS.push(app); }
+
+/* ---------- Local database (IndexedDB, on this phone only) ---------- */
+const DB = (() => {
+  const NAME = 'anu';
+  let db;
+
+  const wrap = (req) => new Promise((ok, fail) => { req.onsuccess = () => ok(req.result); req.onerror = () => fail(req.error); });
+  const needed = () => [...new Set(APPS.flatMap((a) => a.stores || []))];
+
+  function open(version) {
+    return new Promise((ok, fail) => {
+      const req = version ? indexedDB.open(NAME, version) : indexedDB.open(NAME);
+      req.onupgradeneeded = () => {
+        const d = req.result;
+        needed().forEach((s) => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); });
+      };
+      req.onsuccess = () => ok(req.result);
+      req.onerror = () => fail(req.error);
+    });
+  }
+
+  // Opens the database and creates any table a mini-app declares that is missing.
+  async function init() {
+    let d = await open();
+    if (needed().some((s) => !d.objectStoreNames.contains(s))) {
+      const next = d.version + 1;
+      d.close();
+      d = await open(next);
+    }
+    d.onversionchange = () => d.close();
+    db = d;
+  }
+
+  const store = (name, mode) => db.transaction(name, mode).objectStore(name);
+
+  return {
+    init,
+    uid: () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)),
+    all: (name) => wrap(store(name, 'readonly').getAll()),
+    get: (name, id) => wrap(store(name, 'readonly').get(id)),
+    put: async (name, obj) => { if (!obj.id) obj.id = DB.uid(); await wrap(store(name, 'readwrite').put(obj)); return obj; },
+    del: (name, id) => wrap(store(name, 'readwrite').delete(id)),
+
+    async exportAll() {
+      const data = {};
+      for (const s of db.objectStoreNames) data[s] = await DB.all(s);
+      return { app: 'ANU', version: 1, exportedAt: new Date().toISOString(), data };
+    },
+
+    async importAll(payload) {
+      if (!payload || payload.app !== 'ANU' || typeof payload.data !== 'object') throw new Error('Not an ANU backup file.');
+      const names = [...db.objectStoreNames].filter((s) => Array.isArray(payload.data[s]));
+      if (!names.length) throw new Error('This backup has no data to restore.');
+      await new Promise((ok, fail) => {
+        const tx = db.transaction(names, 'readwrite');
+        names.forEach((s) => {
+          const st = tx.objectStore(s);
+          st.clear();
+          payload.data[s].forEach((row) => st.put(row));
+        });
+        tx.oncomplete = ok;
+        tx.onerror = () => fail(tx.error);
+        tx.onabort = () => fail(tx.error);
+      });
+    }
+  };
+})();
+
+/* ---------- Small UI helpers ---------- */
+const UI = {
+  toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(UI._t);
+    UI._t = setTimeout(() => t.classList.remove('show'), 2600);
+  },
+  sheet(html) {
+    const d = $('#sheet');
+    d.innerHTML = `<div class="sheet-in">${html}</div>`;
+    if (!d.open) d.showModal();
+    return d;
+  },
+  closeSheet() { const d = $('#sheet'); if (d.open) d.close(); },
+  confirm(title, message, okLabel = 'Yes') {
+    return new Promise((resolve) => {
+      const d = UI.sheet(`<h2>${title}</h2><p>${message}</p>
+        <button class="btn" data-ok>${okLabel}</button>
+        <button class="btn ghost" data-no>Cancel</button>`);
+      let done = false;
+      const finish = (v) => { if (done) return; done = true; UI.closeSheet(); resolve(v); };
+      $('[data-ok]', d).onclick = () => finish(true);
+      $('[data-no]', d).onclick = () => finish(false);
+      d.addEventListener('close', () => finish(false), { once: true });
+    });
+  }
+};
+// tapping the dimmed area closes the sheet
+$('#sheet').addEventListener('click', (e) => { if (e.target === e.currentTarget) UI.closeSheet(); });
+
+/* ---------- Greeting ---------- */
+function greetingFor(d = new Date()) {
+  const h = d.getHours();
+  if (h >= 5 && h < 12) return ['Good morning', '🌷'];
+  if (h >= 12 && h < 17) return ['Good afternoon', '🎀'];
+  return ['Good evening', '🌙'];
+}
+function updateGreeting() {
+  const el = $('.greeting');
+  if (!el) return;
+  const [text, emoji] = greetingFor();
+  el.innerHTML = `${text}, ${OWNER} <span class="em">${emoji}</span>`;
+}
+
+/* ---------- Backup & restore ---------- */
+async function saveBackup() {
+  const payload = await DB.exportAll();
+  const stamp = new Date().toISOString().slice(0, 10);
+  const name = `anu-backup-${stamp}.json`;
+  const file = new File([JSON.stringify(payload, null, 2)], name, { type: 'application/json' });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: 'ANU backup' });
+      UI.toast('Backup saved');
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;   // she closed the share sheet
+    }
+  }
+  const url = URL.createObjectURL(file);
+  const a = Object.assign(document.createElement('a'), { href: url, download: name });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  UI.toast('Backup saved');
+}
+
+async function restoreBackup(file) {
+  let payload;
+  try { payload = JSON.parse(await file.text()); }
+  catch { UI.toast("That file couldn't be read."); return; }
+  if (!payload || payload.app !== 'ANU') { UI.toast("That isn't an ANU backup file."); return; }
+
+  const ok = await UI.confirm('Restore this backup?',
+    'Everything in ANU on this phone will be replaced by what is in this file. This can\u2019t be undone.', 'Replace my data');
+  if (!ok) return;
+  try {
+    await DB.importAll(payload);
+    UI.toast('Backup restored');
+    route();
+  } catch (err) {
+    UI.toast(err.message || "Couldn't restore that backup.");
+  }
+}
+
+function openBackupSheet() {
+  const d = UI.sheet(`
+    <h2>Backup & restore</h2>
+    <p>Everything you write stays on this phone only. Save a backup file every so often, so you can get your data back if the app is ever deleted or Safari data is cleared.</p>
+    <button class="btn" data-save>Save backup</button>
+    <label class="btn ghost" for="restore-file">Restore from backup</label>
+    <input class="vh" id="restore-file" type="file" accept="application/json,.json">
+    <button class="btn ghost" data-close>Close</button>`);
+  $('[data-save]', d).onclick = () => { UI.closeSheet(); saveBackup(); };
+  $('[data-close]', d).onclick = UI.closeSheet;
+  $('#restore-file', d).onchange = (e) => {
+    const f = e.target.files && e.target.files[0];
+    UI.closeSheet();
+    if (f) restoreBackup(f);
+  };
+}
+
+/* ---------- Screens ---------- */
+const root = $('#root');
+
+function renderHome() {
+  root.innerHTML = `
+    <section class="home screen">
+      <h1 class="greeting"></h1>
+      <nav class="grid" aria-label="Mini-apps">
+        ${APPS.map((a) => `
+          <a class="card" href="#/${a.id}" style="--tint:${a.tint}; --ico-radius:${a.round ? '50%' : '18px'}">
+            <span class="ico" aria-hidden="true">${a.icon}</span>
+            <span class="name">${a.name}</span>
+          </a>`).join('')}
+      </nav>
+      <div class="foot"><button class="linkbtn" id="backup-btn">Backup & restore</button></div>
+    </section>`;
+  updateGreeting();
+  $('#backup-btn').onclick = openBackupSheet;
+}
+
+function renderApp(app) {
+  root.innerHTML = `
+    <section class="app screen" style="--tint:${app.tint}">
+      <header class="bar">
+        <a class="back" href="#/" aria-label="Back to home">
+          <svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg>
+        </a>
+        <h1>${app.name}</h1>
+      </header>
+      <div id="app-body"></div>
+    </section>`;
+  const body = $('#app-body');
+  const ctx = { db: DB, ui: UI, app, go: (p) => { location.hash = '#/' + p; } };
+  if (typeof app.mount === 'function') app.mount(body, ctx);
+  else body.innerHTML = `<div class="note"><div class="big">${app.icon}</div><p>${app.name} isn\u2019t built yet. It\u2019s coming in a later step.</p></div>`;
+}
+
+function route() {
+  const id = location.hash.replace(/^#\/?/, '');
+  const app = APPS.find((a) => a.id === id);
+  if (app) renderApp(app); else renderHome();
+  window.scrollTo(0, 0);
+}
+</script>
+
+
+<!-- =========================================================
+     KAASU
+     Each column is a daily budget envelope: name + a daily setpoint.
+     Per day you log what you spent; balance = setpoint − spent.
+     A column's leftover balance (if negative) is deducted from that
+     same column's setpoint the NEXT day. Any leftover that stays
+     positive after that is swept into that day's (view-only) Savings.
+     ========================================================= -->
+<script>
+const KaasuApp = (() => {
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW = ['S','M','T','W','T','F','S'];
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const dateStr = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+  const daysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+  const monthKey = (y, m) => `${y}-${pad(m + 1)}`;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtMoney = (n) => {
+    const v = Math.round((n + Number.EPSILON) * 100) / 100;
+    return (v < 0 ? '-₹' : '₹') + Math.abs(v).toLocaleString('en-IN');
+  };
+
+  async function loadAll(db) {
+    const [columns, entries, plans] = await Promise.all([db.all('kaasu_columns'), db.all('kaasu_entries'), db.all('kaasu_plans')]);
+    columns.sort((a, b) => a.number - b.number);
+    return { columns, entries, plans };
+  }
+
+  function entryMap(entries) {
+    const m = {};
+    entries.forEach((e) => { m[e.date + '|' + e.columnId] = e.input; });
+    return m;
+  }
+
+  // Walks the month day by day so a negative balance carries into the next day's setpoint.
+  function computeMonth(columns, eMap, y, m) {
+    const n = daysInMonth(y, m);
+    const carry = {};
+    const perDay = {};
+    const colTotals = {};
+    columns.forEach((c) => { colTotals[c.id] = 0; });
+    let totalSavings = 0;
+    for (let d = 1; d <= n; d++) {
+      const date = dateStr(y, m, d);
+      const cols = {};
+      let daySavings = 0;
+      columns.forEach((col) => {
+        const input = eMap[date + '|' + col.id] || 0;
+        const effSetpoint = col.setpoint - (carry[col.id] || 0);
+        const balance = effSetpoint - input;
+        cols[col.id] = { effSetpoint, input, balance };
+        colTotals[col.id] += input;
+        if (balance > 0) daySavings += balance;
+        carry[col.id] = balance < 0 ? -balance : 0;
+      });
+      perDay[date] = { cols, savings: daySavings };
+      totalSavings += daySavings;
+    }
+    return { perDay, colTotals, totalSavings };
+  }
+
+  function mount(el, ctx) {
+    const today = new Date();
+    const state = { view: 'month', y: today.getFullYear(), m: today.getMonth(), selectedDate: null };
+    render();
+
+    async function render() {
+      const { columns, entries, plans } = await loadAll(ctx.db);
+      const eMap = entryMap(entries);
+      if (state.selectedDate) renderDay(columns, eMap);
+      else if (state.view === 'week') renderWeek(columns, eMap);
+      else if (state.view === 'year') renderYear();
+      else renderMonth(columns, eMap, plans);
+    }
+
+    const toolbar = () => `<div class="kaasu-toolbar" role="tablist">
+      ${['month', 'week', 'year'].map((v) => `<button class="seg ${state.view === v ? 'active' : ''}" data-view="${v}">${v[0].toUpperCase()}${v.slice(1)}</button>`).join('')}
+    </div>`;
+
+    function wireToolbar() {
+      $('.kaasu-toolbar', el).onclick = (e) => { const b = e.target.closest('[data-view]'); if (!b) return; state.view = b.dataset.view; render(); };
+    }
+
+    function renderMonth(columns, eMap, plans) {
+      const { y, m } = state;
+      const data = computeMonth(columns, eMap, y, m);
+      const first = new Date(y, m, 1).getDay();
+      const n = daysInMonth(y, m);
+      const todayStr = dateStr(today.getFullYear(), today.getMonth(), today.getDate());
+
+      let cells = '';
+      for (let i = 0; i < first; i++) cells += `<span class="day empty"></span>`;
+      for (let d = 1; d <= n; d++) {
+        const ds = dateStr(y, m, d);
+        cells += `<button class="day ${ds === todayStr ? 'today' : ''}" data-date="${ds}">${d}</button>`;
+      }
+
+      const plan = plans.find((p) => p.id === monthKey(y, m));
+
+      el.innerHTML = `
+        ${toolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous month">‹</button>
+          <span>${MONTH_NAMES[m]} ${y}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
+        </div>
+        <div class="kaasu-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
+        ${columns.length ? `
+        <div class="kaasu-summary">
+          <h3>${MONTH_NAMES[m]} Summary</h3>
+          ${columns.map((c) => `<div class="summary-row"><span>${esc(c.name)}</span><span>${fmtMoney(data.colTotals[c.id] || 0)}</span></div>`).join('')}
+          <div class="summary-row total"><span>Total Savings</span><span>${fmtMoney(data.totalSavings)}</span></div>
+        </div>` : `<div class="note"><p>Tap any date and add your first column to start tracking.</p></div>`}
+        <div class="kaasu-sticky">
+          <div class="pin" aria-hidden="true">📌</div>
+          <textarea class="sticky-text" placeholder="${MONTH_NAMES[m]} plan…">${plan ? esc(plan.text) : ''}</textarea>
+        </div>`;
+
+      wireToolbar();
+      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; shiftMonth(parseInt(b.dataset.nav, 10)); };
+      $('.kaasu-grid', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
+
+      const ta = $('.sticky-text', el);
+      let saveTimer;
+      ta.oninput = () => {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => ctx.db.put('kaasu_plans', { id: monthKey(y, m), text: ta.value }), 500);
+      };
+    }
+
+    function shiftMonth(delta) {
+      let m = state.m + delta, y = state.y;
+      if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; }
+      state.m = m; state.y = y; render();
+    }
+
+    function renderWeek(columns, eMap) {
+      const day0 = new Date(today); day0.setDate(today.getDate() - today.getDay());
+      let rows = '';
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(day0); d.setDate(day0.getDate() + i);
+        const ds = dateStr(d.getFullYear(), d.getMonth(), d.getDate());
+        const data = computeMonth(columns, eMap, d.getFullYear(), d.getMonth());
+        const day = data.perDay[ds];
+        const spent = day ? Object.values(day.cols).reduce((s, c) => s + c.input, 0) : 0;
+        rows += `<button class="week-row" data-date="${ds}">
+          <span class="wd">${d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+          <span class="wd-amt">${fmtMoney(spent)}</span>
+        </button>`;
+      }
+      el.innerHTML = `${toolbar()}<div class="kaasu-week-list">${rows}</div>`;
+      wireToolbar();
+      $('.kaasu-week-list', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
+    }
+
+    function renderYear() {
+      const y = state.y;
+      const cells = MONTH_NAMES.map((name, m) => `<button class="year-month" data-m="${m}">${name.slice(0, 3)}</button>`).join('');
+      el.innerHTML = `${toolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous year">‹</button>
+          <span>${y}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next year">›</button>
+        </div>
+        <div class="kaasu-year-grid">${cells}</div>`;
+      wireToolbar();
+      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; state.y += parseInt(b.dataset.nav, 10); render(); };
+      $('.kaasu-year-grid', el).onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; state.m = parseInt(b.dataset.m, 10); state.view = 'month'; render(); };
+    }
+
+    function renderDay(columns, eMap) {
+      const ds = state.selectedDate;
+      const [y, m, d] = ds.split('-').map(Number);
+      const data = computeMonth(columns, eMap, y, m - 1);
+      const day = data.perDay[ds];
+      const label = new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      const rows = columns.map((col) => {
+        const c = day.cols[col.id];
+        const neg = c.balance < 0;
+        return `<div class="col-row">
+          <div class="col-head">
+            <span class="col-num">${col.number}</span>
+            <span class="col-name">${esc(col.name)}</span>
+            <button class="edit-btn" data-edit="${col.id}" aria-label="Edit ${esc(col.name)}">✎</button>
+          </div>
+          <div class="col-fields">
+            <label class="col-input-wrap">
+              <span class="unit">₹</span>
+              <input type="number" inputmode="decimal" class="col-input" data-input="${col.id}" value="${c.input || ''}" placeholder="0">
+            </label>
+            <div class="col-balance ${neg ? 'neg' : ''}">${fmtMoney(c.balance)}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      el.innerHTML = `
+        <button class="back-link" data-back>‹ ${MONTH_NAMES[m - 1]} ${y}</button>
+        <div class="day-title">${label}</div>
+        ${columns.length ? `
+        <div class="col-list">${rows}</div>
+        <div class="savings-row"><span>Savings</span><span>${fmtMoney(day.savings)}</span></div>` : `<div class="note"><p>No columns yet. Add one to start tracking this day.</p></div>`}
+        <button class="btn ghost add-col-btn" data-add>+ Add column</button>`;
+
+      $('[data-back]', el).onclick = () => { state.selectedDate = null; render(); };
+      $('[data-add]', el).onclick = () => openColumnSheet();
+      el.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = () => openColumnSheet(columns.find((c) => c.id === b.dataset.edit)); });
+      el.querySelectorAll('[data-input]').forEach((inp) => {
+        let t;
+        inp.oninput = () => {
+          clearTimeout(t);
+          t = setTimeout(async () => {
+            const val = parseFloat(inp.value);
+            await ctx.db.put('kaasu_entries', { id: ds + '|' + inp.dataset.input, date: ds, columnId: inp.dataset.input, input: isNaN(val) ? 0 : val });
+            render();
+          }, 450);
+        };
+      });
+
+      function openColumnSheet(existing) {
+        const isEdit = !!existing;
+        const sheet = ctx.ui.sheet(`
+          <h2>${isEdit ? 'Edit column' : 'New column'}</h2>
+          <label class="field-label">Name<input id="col-name-in" type="text" value="${isEdit ? esc(existing.name) : ''}" placeholder="e.g. Food" maxlength="24"></label>
+          <label class="field-label">Daily setpoint (₹)<input id="col-set-in" type="number" inputmode="decimal" value="${isEdit ? existing.setpoint : ''}" placeholder="e.g. 300"></label>
+          <button class="btn" data-save>Save</button>
+          ${isEdit ? `<button class="btn ghost" data-delete>Delete column</button>` : ''}
+          <button class="btn ghost" data-cancel>Cancel</button>`);
+        $('#col-name-in', sheet).focus();
+        $('[data-cancel]', sheet).onclick = () => ctx.ui.closeSheet();
+        $('[data-save]', sheet).onclick = async () => {
+          const name = $('#col-name-in', sheet).value.trim();
+          const setpoint = parseFloat($('#col-set-in', sheet).value);
+          if (!name) { ctx.ui.toast('Give the column a name'); return; }
+          if (isNaN(setpoint) || setpoint < 0) { ctx.ui.toast('Enter a valid setpoint'); return; }
+          if (isEdit) await ctx.db.put('kaasu_columns', { ...existing, name, setpoint });
+          else {
+            const number = columns.length ? Math.max(...columns.map((c) => c.number)) + 1 : 1;
+            await ctx.db.put('kaasu_columns', { number, name, setpoint });
+          }
+          ctx.ui.closeSheet();
+          render();
+        };
+        if (isEdit) {
+          $('[data-delete]', sheet).onclick = async () => {
+            const ok = await ctx.ui.confirm('Delete this column?', `“${esc(existing.name)}” and every day\u2019s entry for it will be removed. This can\u2019t be undone.`, 'Delete');
+            if (!ok) return;
+            await ctx.db.del('kaasu_columns', existing.id);
+            const all = await ctx.db.all('kaasu_entries');
+            await Promise.all(all.filter((e) => e.columnId === existing.id).map((e) => ctx.db.del('kaasu_entries', e.id)));
+            render();
+          };
+        }
+      }
+    }
+  }
+
+  return { mount };
+})();
+</script>
+
+
+<!-- =========================================================
+     MINI-APPS
+     To add a new one later: add one registerApp({...}) block below.
+     ========================================================= -->
+<script>
+registerApp({
+  id: 'kaasu', name: 'Kaasu', icon: '💰', tint: '#FFF0E9',
+  stores: ['kaasu_columns', 'kaasu_entries', 'kaasu_plans'],
+  mount: (el, ctx) => KaasuApp.mount(el, ctx)
+});
+
+registerApp({
+  id: 'health', name: 'Health mukiyam bigil uh', icon: '🩷', tint: '#FCE6E6',
+  stores: ['health_habits', 'health_logs']
+});
+</script>
+
+
+<!-- =========================================================
+     START
+     ========================================================= -->
+<script>
+(async () => {
+  try {
+    await DB.init();
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();  // ask iOS not to evict our data
+  } catch (err) {
+    console.error('Database failed to open', err);
+  }
+  window.addEventListener('hashchange', route);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGreeting(); });
+  setInterval(updateGreeting, 60000);
+  route();
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
 </body>
 </html>
