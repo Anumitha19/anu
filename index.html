@@ -220,6 +220,36 @@ dialog#sheet[open] { animation: rise .22s ease both; }
 .field-label { display: block; font: 500 14px/1.4 var(--round); color: var(--muted); }
 .field-label input { display: block; width: 100%; min-height: 46px; margin-top: 6px; padding: 0 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; font: 16px/1 var(--round); color: var(--ink); }
 .field-label input:focus { outline: none; border-color: var(--rose); }
+
+/* ---------- Health ---------- */
+.habit-list { display: grid; gap: 10px; margin-bottom: 14px; }
+.habit-row, .week-habit-row { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 18px; padding: 12px 14px; box-shadow: 0 2px 6px rgba(181, 71, 106, .08); }
+.week-habit-row { flex-direction: column; align-items: stretch; gap: 10px; }
+.habit-check {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--rose);
+  background: transparent; color: #fff; font: 700 14px/1 var(--round); display: grid; place-items: center;
+}
+.habit-check.checked { background: var(--rose-deep); border-color: var(--rose-deep); }
+.habit-main { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.habit-name { font: 600 16px/1.25 var(--round); }
+.habit-badge { font: 500 12.5px/1.2 var(--round); color: var(--muted); }
+
+.kind-switch { display: flex; gap: 8px; }
+.kind-switch .seg { min-height: 42px; }
+
+.dow-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 2px 0 10px; padding-left: 0; }
+.dow-labels span { text-align: center; font: 600 12px/1 var(--round); color: var(--muted); }
+.dow-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dow-check { aspect-ratio: 1; border-radius: 10px; border: 1px solid var(--line); background: var(--pale); color: #fff; font: 700 13px/1 var(--round); display: grid; place-items: center; }
+.dow-check.checked { background: var(--rose-deep); border-color: var(--rose-deep); }
+.week-habit-list { display: grid; gap: 10px; }
+
+.health-grid .day.health-day { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding-top: 2px; }
+.health-day .dnum { font: 600 14px/1 var(--round); }
+.health-day .dfrac { font: 600 9.5px/1 var(--round); opacity: .75; }
+.health-day.lvl-0 { background: #fff; }
+.health-day.lvl-1 { background: #F8C9D6; }
+.health-day.lvl-2 { background: var(--rose-deep); color: #fff; }
 </style>
 </head>
 
@@ -517,6 +547,11 @@ const KaasuApp = (() => {
     return { columns, entries, plans };
   }
 
+  // Columns belong to the month they were created in. A column saved before
+  // this existed (no monthKey) is treated as belonging to every month, so
+  // nothing already on the phone disappears.
+  const columnsFor = (columns, y, m) => columns.filter((c) => !c.monthKey || c.monthKey === monthKey(y, m));
+
   function entryMap(entries) {
     const m = {};
     entries.forEach((e) => { m[e.date + '|' + e.columnId] = e.input; });
@@ -574,7 +609,9 @@ const KaasuApp = (() => {
 
     function renderMonth(columns, eMap, plans) {
       const { y, m } = state;
-      const data = computeMonth(columns, eMap, y, m);
+      const monthColumns = columnsFor(columns, y, m);
+      const data = computeMonth(monthColumns, eMap, y, m);
+      const totalExpenses = Object.values(data.colTotals).reduce((a, b) => a + b, 0);
       const first = new Date(y, m, 1).getDay();
       const n = daysInMonth(y, m);
       const todayStr = dateStr(today.getFullYear(), today.getMonth(), today.getDate());
@@ -596,12 +633,12 @@ const KaasuApp = (() => {
           <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
         </div>
         <div class="kaasu-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
-        ${columns.length ? `
+        ${monthColumns.length ? `
         <div class="kaasu-summary">
           <h3>${MONTH_NAMES[m]} Summary</h3>
-          ${columns.map((c) => `<div class="summary-row"><span>${esc(c.name)}</span><span>${fmtMoney(data.colTotals[c.id] || 0)}</span></div>`).join('')}
+          <div class="summary-row"><span>Total Expenses</span><span>${fmtMoney(totalExpenses)}</span></div>
           <div class="summary-row total"><span>Total Savings</span><span>${fmtMoney(data.totalSavings)}</span></div>
-        </div>` : `<div class="note"><p>Tap any date and add your first column to start tracking.</p></div>`}
+        </div>` : `<div class="note"><p>Tap any date and add this month's first column to start tracking.</p></div>`}
         <div class="kaasu-sticky">
           <div class="pin" aria-hidden="true">📌</div>
           <textarea class="sticky-text" placeholder="${MONTH_NAMES[m]} plan…">${plan ? esc(plan.text) : ''}</textarea>
@@ -631,7 +668,7 @@ const KaasuApp = (() => {
       for (let i = 0; i < 7; i++) {
         const d = new Date(day0); d.setDate(day0.getDate() + i);
         const ds = dateStr(d.getFullYear(), d.getMonth(), d.getDate());
-        const data = computeMonth(columns, eMap, d.getFullYear(), d.getMonth());
+        const data = computeMonth(columnsFor(columns, d.getFullYear(), d.getMonth()), eMap, d.getFullYear(), d.getMonth());
         const day = data.perDay[ds];
         const spent = day ? Object.values(day.cols).reduce((s, c) => s + c.input, 0) : 0;
         rows += `<button class="week-row" data-date="${ds}">
@@ -662,11 +699,12 @@ const KaasuApp = (() => {
     function renderDay(columns, eMap) {
       const ds = state.selectedDate;
       const [y, m, d] = ds.split('-').map(Number);
-      const data = computeMonth(columns, eMap, y, m - 1);
+      const monthColumns = columnsFor(columns, y, m - 1);
+      const data = computeMonth(monthColumns, eMap, y, m - 1);
       const day = data.perDay[ds];
       const label = new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-      const rows = columns.map((col) => {
+      const rows = monthColumns.map((col) => {
         const c = day.cols[col.id];
         const neg = c.balance < 0;
         return `<div class="col-row">
@@ -688,14 +726,14 @@ const KaasuApp = (() => {
       el.innerHTML = `
         <button class="back-link" data-back>‹ ${MONTH_NAMES[m - 1]} ${y}</button>
         <div class="day-title">${label}</div>
-        ${columns.length ? `
+        ${monthColumns.length ? `
         <div class="col-list">${rows}</div>
-        <div class="savings-row"><span>Savings</span><span>${fmtMoney(day.savings)}</span></div>` : `<div class="note"><p>No columns yet. Add one to start tracking this day.</p></div>`}
-        <button class="btn ghost add-col-btn" data-add>+ Add column</button>`;
+        <div class="savings-row"><span>Savings</span><span>${fmtMoney(day.savings)}</span></div>` : `<div class="note"><p>No columns yet this month. Add one to start tracking ${MONTH_NAMES[m - 1]}.</p></div>`}
+        <button class="btn ghost add-col-btn" data-add>+ Add column for ${MONTH_NAMES[m - 1]}</button>`;
 
       $('[data-back]', el).onclick = () => { state.selectedDate = null; render(); };
       $('[data-add]', el).onclick = () => openColumnSheet();
-      el.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = () => openColumnSheet(columns.find((c) => c.id === b.dataset.edit)); });
+      el.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = () => openColumnSheet(monthColumns.find((c) => c.id === b.dataset.edit)); });
       el.querySelectorAll('[data-input]').forEach((inp) => {
         let t;
         inp.oninput = () => {
@@ -726,8 +764,8 @@ const KaasuApp = (() => {
           if (isNaN(setpoint) || setpoint < 0) { ctx.ui.toast('Enter a valid setpoint'); return; }
           if (isEdit) await ctx.db.put('kaasu_columns', { ...existing, name, setpoint });
           else {
-            const number = columns.length ? Math.max(...columns.map((c) => c.number)) + 1 : 1;
-            await ctx.db.put('kaasu_columns', { number, name, setpoint });
+            const number = monthColumns.length ? Math.max(...monthColumns.map((c) => c.number)) + 1 : 1;
+            await ctx.db.put('kaasu_columns', { number, name, setpoint, monthKey: monthKey(y, m - 1) });
           }
           ctx.ui.closeSheet();
           render();
@@ -752,6 +790,224 @@ const KaasuApp = (() => {
 
 
 <!-- =========================================================
+     HEALTH MUKIYAM BIGIL UH
+     Fully custom habit tracker — nothing pre-filled. A habit is
+     either Daily or Weekly (N times a week, e.g. hair oil once a
+     week), logged by date.
+     ========================================================= -->
+<script>
+const HealthApp = (() => {
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW = ['S','M','T','W','T','F','S'];
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const dateStr = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+  const daysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const sameDate = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+  async function loadAll(db) {
+    const [habits, logs] = await Promise.all([db.all('health_habits'), db.all('health_logs')]);
+    habits.sort((a, b) => (a.order || 0) - (b.order || 0));
+    return { habits, logs };
+  }
+
+  function logSet(logs) {
+    const s = new Set();
+    logs.forEach((l) => s.add(l.date + '|' + l.habitId));
+    return s;
+  }
+
+  function weekStart(d) { const s = new Date(d); s.setDate(d.getDate() - d.getDay()); return s; }
+
+  function mount(el, ctx) {
+    const today = new Date();
+    const state = { view: 'daily', y: today.getFullYear(), m: today.getMonth(), d: today.getDate() };
+    render();
+
+    const cursor = () => new Date(state.y, state.m, state.d);
+    const setCursor = (dt) => { state.y = dt.getFullYear(); state.m = dt.getMonth(); state.d = dt.getDate(); };
+
+    async function render() {
+      const { habits, logs } = await loadAll(ctx.db);
+      const done = logSet(logs);
+      if (state.view === 'weekly') renderWeekly(habits, done);
+      else if (state.view === 'monthly') renderMonthly(habits, done);
+      else renderDaily(habits, done);
+    }
+
+    const toolbar = () => `<div class="kaasu-toolbar" role="tablist">
+      ${['daily', 'weekly', 'monthly'].map((v) => `<button class="seg ${state.view === v ? 'active' : ''}" data-view="${v}">${v[0].toUpperCase()}${v.slice(1)}</button>`).join('')}
+    </div>`;
+
+    function wireToolbar() {
+      $('.kaasu-toolbar', el).onclick = (e) => { const b = e.target.closest('[data-view]'); if (!b) return; state.view = b.dataset.view; render(); };
+    }
+
+    async function toggle(dateStrVal, habitId, isDone) {
+      const id = dateStrVal + '|' + habitId;
+      if (isDone) await ctx.db.del('health_logs', id);
+      else await ctx.db.put('health_logs', { id, date: dateStrVal, habitId });
+      render();
+    }
+
+    function renderDaily(habits, done) {
+      const dt = cursor();
+      const ds = dateStr(state.y, state.m, state.d);
+      const label = dt.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      const rows = habits.map((h) => {
+        const isDone = done.has(ds + '|' + h.id);
+        return `<div class="habit-row">
+          <button class="habit-check ${isDone ? 'checked' : ''}" data-toggle="${h.id}" aria-label="${isDone ? 'Mark not done' : 'Mark done'}: ${esc(h.name)}">${isDone ? '✓' : ''}</button>
+          <div class="habit-main">
+            <span class="habit-name">${esc(h.name)}</span>
+            <span class="habit-badge">${h.kind === 'weekly' ? (h.timesPerWeek || 1) + 'x / week' : 'Daily'}</span>
+          </div>
+          <button class="edit-btn" data-edit="${h.id}" aria-label="Edit ${esc(h.name)}">✎</button>
+        </div>`;
+      }).join('');
+
+      el.innerHTML = `
+        ${toolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous day">‹</button>
+          <span>${label}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next day">›</button>
+        </div>
+        ${habits.length ? `<div class="habit-list">${rows}</div>` : `<div class="note"><p>No habits yet. Add your own below — nothing is pre-filled.</p></div>`}
+        <button class="btn ghost add-col-btn" data-add>+ Add habit</button>`;
+
+      wireToolbar();
+      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; const nd = new Date(dt); nd.setDate(dt.getDate() + parseInt(b.dataset.nav, 10)); setCursor(nd); render(); };
+      $('[data-add]', el).onclick = () => openHabitSheet();
+      el.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = () => openHabitSheet(habits.find((h) => h.id === b.dataset.edit)); });
+      el.querySelectorAll('[data-toggle]').forEach((b) => { b.onclick = () => toggle(ds, b.dataset.toggle, b.classList.contains('checked')); });
+
+      function openHabitSheet(existing) { openHabitSheetShared(existing, habits, render, ctx); }
+    }
+
+    function renderWeekly(habits, done) {
+      const dt = cursor();
+      const start = weekStart(dt);
+      const days = [...Array(7)].map((_, i) => { const d = new Date(start); d.setDate(start.getDate() + i); return d; });
+      const endLabel = days[6].toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+      const startLabel = days[0].toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+      const rows = habits.map((h) => {
+        const weekCount = days.filter((d) => done.has(dateStr(d.getFullYear(), d.getMonth(), d.getDate()) + '|' + h.id)).length;
+        const dayDots = days.map((d) => {
+          const ds = dateStr(d.getFullYear(), d.getMonth(), d.getDate());
+          const isDone = done.has(ds + '|' + h.id);
+          return `<button class="dow-check ${isDone ? 'checked' : ''}" data-toggle="${h.id}" data-date="${ds}">${isDone ? '✓' : ''}</button>`;
+        }).join('');
+        return `<div class="week-habit-row">
+          <div class="habit-main">
+            <span class="habit-name">${esc(h.name)}</span>
+            <span class="habit-badge">${h.kind === 'weekly' ? weekCount + '/' + (h.timesPerWeek || 1) + ' this week' : weekCount + '/7 this week'}</span>
+          </div>
+          <div class="dow-grid">${dayDots}</div>
+        </div>`;
+      }).join('');
+
+      el.innerHTML = `
+        ${toolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous week">‹</button>
+          <span>${startLabel} – ${endLabel}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next week">›</button>
+        </div>
+        <div class="dow-labels">${DOW.map((d) => `<span>${d}</span>`).join('')}</div>
+        ${habits.length ? `<div class="week-habit-list">${rows}</div>` : `<div class="note"><p>No habits yet. Add your own from the Daily tab.</p></div>`}`;
+
+      wireToolbar();
+      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; const nd = new Date(dt); nd.setDate(dt.getDate() + parseInt(b.dataset.nav, 10) * 7); setCursor(nd); render(); };
+      el.querySelectorAll('[data-toggle]').forEach((b) => { b.onclick = () => toggle(b.dataset.date, b.dataset.toggle, b.classList.contains('checked')); });
+    }
+
+    function renderMonthly(habits, done) {
+      const { y, m } = state;
+      const first = new Date(y, m, 1).getDay();
+      const n = daysInMonth(y, m);
+      const total = habits.length;
+
+      let cells = '';
+      for (let i = 0; i < first; i++) cells += `<span class="day empty"></span>`;
+      for (let d = 1; d <= n; d++) {
+        const ds = dateStr(y, m, d);
+        const count = total ? habits.filter((h) => done.has(ds + '|' + h.id)).length : 0;
+        const lvl = !total ? '' : count === 0 ? 'lvl-0' : count === total ? 'lvl-2' : 'lvl-1';
+        cells += `<button class="day health-day ${lvl}" data-date="${ds}">
+          <span class="dnum">${d}</span>${total ? `<span class="dfrac">${count}/${total}</span>` : ''}
+        </button>`;
+      }
+
+      el.innerHTML = `
+        ${toolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous month">‹</button>
+          <span>${MONTH_NAMES[m]} ${y}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
+        </div>
+        <div class="kaasu-grid health-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
+        ${!total ? `<div class="note"><p>Add a habit from the Daily tab to see it here.</p></div>` : ''}`;
+
+      wireToolbar();
+      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; let nm = state.m + parseInt(b.dataset.nav, 10), ny = state.y; if (nm < 0) { nm = 11; ny--; } if (nm > 11) { nm = 0; ny++; } state.m = nm; state.y = ny; render(); };
+      $('.health-grid', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; const [yy, mm, dd] = b.dataset.date.split('-').map(Number); state.y = yy; state.m = mm - 1; state.d = dd; state.view = 'daily'; render(); };
+    }
+
+    function openHabitSheetShared(existing, habits, afterSave) {
+      const isEdit = !!existing;
+      const kind0 = isEdit ? existing.kind : 'daily';
+      const sheet = ctx.ui.sheet(`
+        <h2>${isEdit ? 'Edit habit' : 'New habit'}</h2>
+        <label class="field-label">Name<input id="h-name-in" type="text" value="${isEdit ? esc(existing.name) : ''}" placeholder="e.g. Hair oil" maxlength="28"></label>
+        <div class="kind-switch">
+          <button type="button" class="seg ${kind0 === 'daily' ? 'active' : ''}" data-kind="daily">Daily</button>
+          <button type="button" class="seg ${kind0 === 'weekly' ? 'active' : ''}" data-kind="weekly">Weekly</button>
+        </div>
+        <label class="field-label" id="times-wrap" style="${kind0 === 'weekly' ? '' : 'display:none'}">Times per week<input id="h-times-in" type="number" inputmode="numeric" min="1" max="7" value="${isEdit && existing.timesPerWeek ? existing.timesPerWeek : 1}"></label>
+        <button class="btn" data-save>Save</button>
+        ${isEdit ? `<button class="btn ghost" data-delete>Delete habit</button>` : ''}
+        <button class="btn ghost" data-cancel>Cancel</button>`);
+      let kind = kind0;
+      $('#h-name-in', sheet).focus();
+      sheet.querySelectorAll('[data-kind]').forEach((b) => {
+        b.onclick = () => { kind = b.dataset.kind; sheet.querySelectorAll('[data-kind]').forEach((x) => x.classList.toggle('active', x === b)); $('#times-wrap', sheet).style.display = kind === 'weekly' ? '' : 'none'; };
+      });
+      $('[data-cancel]', sheet).onclick = () => ctx.ui.closeSheet();
+      $('[data-save]', sheet).onclick = async () => {
+        const name = $('#h-name-in', sheet).value.trim();
+        if (!name) { ctx.ui.toast('Give the habit a name'); return; }
+        const timesPerWeek = kind === 'weekly' ? Math.max(1, Math.min(7, parseInt($('#h-times-in', sheet).value, 10) || 1)) : undefined;
+        if (isEdit) await ctx.db.put('health_habits', { ...existing, name, kind, timesPerWeek });
+        else {
+          const order = habits.length ? Math.max(...habits.map((h) => h.order || 0)) + 1 : 1;
+          await ctx.db.put('health_habits', { name, kind, timesPerWeek, order });
+        }
+        ctx.ui.closeSheet();
+        afterSave();
+      };
+      if (isEdit) {
+        $('[data-delete]', sheet).onclick = async () => {
+          const ok = await ctx.ui.confirm('Delete this habit?', `“${esc(existing.name)}” and all its logged days will be removed. This can\u2019t be undone.`, 'Delete');
+          if (!ok) return;
+          await ctx.db.del('health_habits', existing.id);
+          const allLogs = await ctx.db.all('health_logs');
+          await Promise.all(allLogs.filter((l) => l.habitId === existing.id).map((l) => ctx.db.del('health_logs', l.id)));
+          afterSave();
+        };
+      }
+    }
+  }
+
+  return { mount };
+})();
+</script>
+
+
+<!-- =========================================================
      MINI-APPS
      To add a new one later: add one registerApp({...}) block below.
      ========================================================= -->
@@ -764,7 +1020,8 @@ registerApp({
 
 registerApp({
   id: 'health', name: 'Health mukiyam bigil uh', icon: '🩷', tint: '#FCE6E6',
-  stores: ['health_habits', 'health_logs']
+  stores: ['health_habits', 'health_logs'],
+  mount: (el, ctx) => HealthApp.mount(el, ctx)
 });
 </script>
 
