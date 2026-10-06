@@ -217,6 +217,13 @@ dialog#sheet[open] { animation: rise .22s ease both; }
 .savings-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, .72); border-radius: 16px; padding: 14px 18px; font: 600 16px/1 var(--round); box-shadow: var(--shadow); margin-bottom: 18px; }
 .savings-row .neg { color: #C23B3B; }
 
+.manage-cols-btn { margin-bottom: 16px; }
+.manage-col-list { display: grid; gap: 8px; margin: 4px 0 4px; }
+.manage-col-row { display: flex; align-items: center; gap: 10px; background: var(--pale); border-radius: 14px; padding: 10px 12px; }
+.manage-col-name { flex: 1; font: 600 15px/1.2 var(--round); }
+.manage-col-set { color: var(--muted); font: 500 13.5px/1 var(--round); }
+.muted-note { color: var(--muted); font-size: 14px; margin: 4px 0; }
+
 .field-label { display: block; font: 500 14px/1.4 var(--round); color: var(--muted); }
 .field-label input { display: block; width: 100%; min-height: 46px; margin-top: 6px; padding: 0 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; font: 16px/1 var(--round); color: var(--ink); }
 .field-label input:focus { outline: none; border-color: var(--rose); }
@@ -633,12 +640,13 @@ const KaasuApp = (() => {
           <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
         </div>
         <div class="kaasu-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
+        <button class="btn ghost manage-cols-btn" data-manage>✎ Manage ${MONTH_NAMES[m]} columns</button>
         ${monthColumns.length ? `
         <div class="kaasu-summary">
           <h3>${MONTH_NAMES[m]} Summary</h3>
           <div class="summary-row"><span>Total Expenses</span><span>${fmtMoney(totalExpenses)}</span></div>
           <div class="summary-row total"><span>Total Savings</span><span>${fmtMoney(data.totalSavings)}</span></div>
-        </div>` : `<div class="note"><p>Tap any date and add this month's first column to start tracking.</p></div>`}
+        </div>` : `<div class="note"><p>No columns yet for ${MONTH_NAMES[m]}. Tap “Manage columns” above to add your first one.</p></div>`}
         <div class="kaasu-sticky">
           <div class="pin" aria-hidden="true">📌</div>
           <textarea class="sticky-text" placeholder="${MONTH_NAMES[m]} plan…">${plan ? esc(plan.text) : ''}</textarea>
@@ -647,6 +655,30 @@ const KaasuApp = (() => {
       wireToolbar();
       $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; shiftMonth(parseInt(b.dataset.nav, 10)); };
       $('.kaasu-grid', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
+      $('[data-manage]', el).onclick = () => openManageColumnsSheet();
+
+      async function openManageColumnsSheet() {
+        const fresh = columnsFor((await loadAll(ctx.db)).columns, y, m);
+        const sheet = ctx.ui.sheet(`
+          <h2>${MONTH_NAMES[m]} columns</h2>
+          <p>These apply to every day in ${MONTH_NAMES[m]} ${y}.</p>
+          <div class="manage-col-list">
+            ${fresh.length ? fresh.map((c) => `
+              <div class="manage-col-row">
+                <span class="col-num">${c.number}</span>
+                <span class="manage-col-name">${esc(c.name)}</span>
+                <span class="manage-col-set">₹${c.setpoint}/day</span>
+                <button class="edit-btn" data-edit="${c.id}" aria-label="Edit ${esc(c.name)}">✎</button>
+              </div>`).join('') : `<p class="muted-note">No columns yet.</p>`}
+          </div>
+          <button class="btn" data-add-new>+ Add column</button>
+          <button class="btn ghost" data-close>Close</button>`);
+        $('[data-close]', sheet).onclick = () => { ctx.ui.closeSheet(); render(); };
+        $('[data-add-new]', sheet).onclick = () => openColumnEditSheet(ctx, y, m, fresh, null, () => { openManageColumnsSheet(); render(); });
+        sheet.querySelectorAll('[data-edit]').forEach((b) => {
+          b.onclick = () => openColumnEditSheet(ctx, y, m, fresh, fresh.find((c) => c.id === b.dataset.edit), () => { openManageColumnsSheet(); render(); });
+        });
+      }
 
       const ta = $('.sticky-text', el);
       let saveTimer;
@@ -731,9 +763,12 @@ const KaasuApp = (() => {
         <div class="savings-row"><span>Savings</span><span>${fmtMoney(day.savings)}</span></div>` : `<div class="note"><p>No columns yet this month. Add one to start tracking ${MONTH_NAMES[m - 1]}.</p></div>`}
         <button class="btn ghost add-col-btn" data-add>+ Add column for ${MONTH_NAMES[m - 1]}</button>`;
 
+      const backToDay = () => { ctx.ui.closeSheet(); render(); };
       $('[data-back]', el).onclick = () => { state.selectedDate = null; render(); };
-      $('[data-add]', el).onclick = () => openColumnSheet();
-      el.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = () => openColumnSheet(monthColumns.find((c) => c.id === b.dataset.edit)); });
+      $('[data-add]', el).onclick = () => openColumnEditSheet(ctx, y, m - 1, monthColumns, null, backToDay);
+      el.querySelectorAll('[data-edit]').forEach((b) => {
+        b.onclick = () => openColumnEditSheet(ctx, y, m - 1, monthColumns, monthColumns.find((c) => c.id === b.dataset.edit), backToDay);
+      });
       el.querySelectorAll('[data-input]').forEach((inp) => {
         let t;
         inp.oninput = () => {
@@ -745,42 +780,44 @@ const KaasuApp = (() => {
           }, 450);
         };
       });
+    }
+  }
 
-      function openColumnSheet(existing) {
-        const isEdit = !!existing;
-        const sheet = ctx.ui.sheet(`
-          <h2>${isEdit ? 'Edit column' : 'New column'}</h2>
-          <label class="field-label">Name<input id="col-name-in" type="text" value="${isEdit ? esc(existing.name) : ''}" placeholder="e.g. Food" maxlength="24"></label>
-          <label class="field-label">Daily setpoint (₹)<input id="col-set-in" type="number" inputmode="decimal" value="${isEdit ? existing.setpoint : ''}" placeholder="e.g. 300"></label>
-          <button class="btn" data-save>Save</button>
-          ${isEdit ? `<button class="btn ghost" data-delete>Delete column</button>` : ''}
-          <button class="btn ghost" data-cancel>Cancel</button>`);
-        $('#col-name-in', sheet).focus();
-        $('[data-cancel]', sheet).onclick = () => ctx.ui.closeSheet();
-        $('[data-save]', sheet).onclick = async () => {
-          const name = $('#col-name-in', sheet).value.trim();
-          const setpoint = parseFloat($('#col-set-in', sheet).value);
-          if (!name) { ctx.ui.toast('Give the column a name'); return; }
-          if (isNaN(setpoint) || setpoint < 0) { ctx.ui.toast('Enter a valid setpoint'); return; }
-          if (isEdit) await ctx.db.put('kaasu_columns', { ...existing, name, setpoint });
-          else {
-            const number = monthColumns.length ? Math.max(...monthColumns.map((c) => c.number)) + 1 : 1;
-            await ctx.db.put('kaasu_columns', { number, name, setpoint, monthKey: monthKey(y, m - 1) });
-          }
-          ctx.ui.closeSheet();
-          render();
-        };
-        if (isEdit) {
-          $('[data-delete]', sheet).onclick = async () => {
-            const ok = await ctx.ui.confirm('Delete this column?', `“${esc(existing.name)}” and every day\u2019s entry for it will be removed. This can\u2019t be undone.`, 'Delete');
-            if (!ok) return;
-            await ctx.db.del('kaasu_columns', existing.id);
-            const all = await ctx.db.all('kaasu_entries');
-            await Promise.all(all.filter((e) => e.columnId === existing.id).map((e) => ctx.db.del('kaasu_entries', e.id)));
-            render();
-          };
-        }
+  // Shared name/setpoint editor for a column — used both from a day page and
+  // from "Manage columns" at the month level. onBack() runs after save,
+  // delete, or cancel, so the caller decides what to show next.
+  function openColumnEditSheet(ctx, y, mZero, monthColumnsSnapshot, existing, onBack) {
+    const isEdit = !!existing;
+    const sheet = ctx.ui.sheet(`
+      <h2>${isEdit ? 'Edit column' : 'New column'}</h2>
+      <label class="field-label">Name<input id="col-name-in" type="text" value="${isEdit ? esc(existing.name) : ''}" placeholder="e.g. Food" maxlength="24"></label>
+      <label class="field-label">Daily setpoint (₹)<input id="col-set-in" type="number" inputmode="decimal" value="${isEdit ? existing.setpoint : ''}" placeholder="e.g. 300"></label>
+      <button class="btn" data-save>Save</button>
+      ${isEdit ? `<button class="btn ghost" data-delete>Delete column</button>` : ''}
+      <button class="btn ghost" data-cancel>Cancel</button>`);
+    $('#col-name-in', sheet).focus();
+    $('[data-cancel]', sheet).onclick = () => onBack();
+    $('[data-save]', sheet).onclick = async () => {
+      const name = $('#col-name-in', sheet).value.trim();
+      const setpoint = parseFloat($('#col-set-in', sheet).value);
+      if (!name) { ctx.ui.toast('Give the column a name'); return; }
+      if (isNaN(setpoint) || setpoint < 0) { ctx.ui.toast('Enter a valid setpoint'); return; }
+      if (isEdit) await ctx.db.put('kaasu_columns', { ...existing, name, setpoint });
+      else {
+        const number = monthColumnsSnapshot.length ? Math.max(...monthColumnsSnapshot.map((c) => c.number)) + 1 : 1;
+        await ctx.db.put('kaasu_columns', { number, name, setpoint, monthKey: monthKey(y, mZero) });
       }
+      onBack();
+    };
+    if (isEdit) {
+      $('[data-delete]', sheet).onclick = async () => {
+        const ok = await ctx.ui.confirm('Delete this column?', `“${esc(existing.name)}” and every day\u2019s entry for it will be removed. This can\u2019t be undone.`, 'Delete');
+        if (!ok) return;
+        await ctx.db.del('kaasu_columns', existing.id);
+        const all = await ctx.db.all('kaasu_entries');
+        await Promise.all(all.filter((e) => e.columnId === existing.id).map((e) => ctx.db.del('kaasu_entries', e.id)));
+        onBack();
+      };
     }
   }
 
