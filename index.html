@@ -284,6 +284,116 @@ dialog#sheet[open] { animation: rise .22s ease both; }
 .freq-switch .seg { min-height: 42px; }
 .manage-col-set { color: var(--muted); font: 500 13.5px/1 var(--round); }
 .muted-note { color: var(--muted); font-size: 14px; margin: 4px 0; }
+.neg-text { color: #B23B3B; }
+
+/* ---------- Kaasu: tab shell ---------- */
+.kaasu-shell { padding-bottom: 84px; }
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: flex; justify-content: space-around;
+  padding: 8px 6px calc(env(safe-area-inset-bottom, 0px) + 6px);
+  background: var(--cream); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border-top: 1px solid rgba(255, 255, 255, .5); box-shadow: 0 -8px 24px rgba(20, 15, 5, .14);
+}
+.tabbtn { flex: 1; max-width: 84px; display: flex; flex-direction: column; align-items: center; gap: 3px; border: 0; background: transparent; padding: 4px 2px; color: var(--muted); }
+.tabbtn svg { width: 21px; height: 21px; }
+.tabbtn span { font: 500 10.5px/1 var(--round); }
+.tabbtn.active { color: var(--rose-deep); }
+
+.month-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.35); font: 600 16px/1 var(--round); }
+.navbtn.sm { width: 32px; height: 32px; font-size: 15px; }
+
+/* ---------- Kaasu: Today ---------- */
+.hero {
+  background: var(--pale); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid rgba(255,255,255,.5); border-radius: 22px; padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 14px;
+}
+.hero-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-top: 1px solid var(--line); }
+.hero-row:first-child { border-top: 0; }
+.hero-label { font: 500 14px/1 var(--round); color: var(--muted); }
+.hero-val { font: 700 20px/1 var(--round); color: var(--ink); }
+.hero-val.accent { color: var(--rose-deep); }
+.hero-val.neg { color: #B23B3B; }
+
+.safe-today {
+  display: flex; align-items: center; background: var(--pale); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid rgba(255,255,255,.5); border-radius: 18px; padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 14px;
+}
+.safe-today > div:not(.safe-div) { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.safe-div { flex: none; width: 1px; align-self: stretch; background: var(--line); margin: 0 14px; }
+.safe-label { font: 500 12.5px/1.2 var(--round); color: var(--muted); }
+.safe-val { font: 700 18px/1.2 var(--round); color: var(--ink); }
+.safe-val.accent { color: var(--rose-deep); }
+
+.insight { margin: 0 0 16px; padding: 12px 16px; background: rgba(201,162,39,.14); border-left: 3px solid var(--rose); border-radius: 0 12px 12px 0; font: italic 400 14px/1.5 var(--serif); color: var(--ink); }
+
+.section-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 10px; }
+.section-head h3 { margin: 0; font: 500 16px/1.2 var(--serif); color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.3); }
+.link-sm { border: 0; background: transparent; color: var(--rose); font: 600 12.5px/1 var(--round); text-shadow: 0 1px 6px rgba(0,0,0,.3); }
+
+.cat-list { display: grid; gap: 10px; margin-bottom: 16px; }
+.cat-row { background: var(--pale); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,.5); border-radius: 16px; padding: 12px 14px; }
+.cat-row-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.cat-name { font: 600 15px/1.2 var(--round); }
+.cat-amt { font: 600 13.5px/1 var(--round); color: var(--muted); }
+.cat-amt.neg { color: #B23B3B; }
+.cat-of { font-weight: 400; opacity: .8; }
+.progress-track { height: 6px; border-radius: 999px; background: rgba(43,35,20,.1); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; background: var(--rose-deep); }
+.progress-fill.over { background: #B23B3B; }
+
+.plan-fold { background: rgba(255,246,219,.80); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.5); border-radius: 16px; padding: 14px 16px; margin-bottom: 18px; }
+.plan-fold summary { font: 600 14px/1 var(--round); color: #6B4E17; cursor: pointer; }
+.plan-fold .plan-text { width: 100%; min-height: 70px; border: 0; background: transparent; resize: vertical; font: 14.5px/1.5 var(--round); color: #6B4E17; margin-top: 10px; }
+.plan-fold .plan-text:focus { outline: none; }
+
+.fab {
+  position: fixed; right: 18px; bottom: calc(env(safe-area-inset-bottom, 0px) + 78px); z-index: 9;
+  width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--rose-deep); color: #fff;
+  font: 300 30px/1 var(--round); box-shadow: 0 10px 24px rgba(20,15,5,.35); display: grid; place-items: center;
+}
+
+/* ---------- Kaasu: Transactions ---------- */
+.txn-day-group { margin-bottom: 16px; }
+.txn-day-label { font: 600 12.5px/1 var(--round); color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.3); margin-bottom: 8px; }
+.txn-row {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 0 14px; margin-bottom: 8px;
+  background: var(--pale); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid rgba(255,255,255,.5); border-radius: 14px; text-align: left;
+}
+.txn-cat { font: 600 14.5px/1 var(--round); color: var(--ink); }
+.txn-note { flex: 1; font: 400 13px/1 var(--round); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.txn-amt { margin-left: auto; font: 700 15px/1 var(--round); color: #B23B3B; flex: none; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 14px; }
+.chip { border: 1px solid var(--line); background: rgba(255,255,255,.5); border-radius: 999px; padding: 8px 14px; font: 500 13.5px/1 var(--round); color: var(--muted); }
+.chip.active { background: var(--rose-deep); border-color: var(--rose-deep); color: #fff; }
+
+/* ---------- Kaasu: Budget ---------- */
+.income-field { margin-bottom: 18px; }
+.budget-list { display: grid; gap: 10px; margin-bottom: 14px; }
+.budget-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--pale); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid rgba(255,255,255,.5); border-radius: 16px; padding: 10px 12px;
+}
+.reorder-col { display: flex; flex-direction: column; gap: 2px; }
+.reorder-btn { width: 24px; height: 20px; border: 0; background: transparent; color: var(--muted); font-size: 9px; }
+.reorder-btn:disabled { opacity: .25; }
+.budget-row-main { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.budget-row-name { font: 600 15px/1.2 var(--round); }
+.budget-row-amt { font: 500 13px/1 var(--round); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+
+/* ---------- Kaasu: Calendar spend intensity ---------- */
+.day.spend-lvl-1 { background: rgba(201,162,39,.22); }
+.day.spend-lvl-2 { background: rgba(201,162,39,.42); }
+.day.spend-lvl-3 { background: rgba(201,162,39,.65); color: #fff; }
+
+/* ---------- Kaasu: Savings ---------- */
+.sweep-list { display: grid; gap: 8px; margin-bottom: 18px; }
+.sweep-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,.40); border-radius: 14px; padding: 10px 14px; font: 500 14px/1.3 var(--round); }
+.sweep-line { font: 600 13px/1.3 var(--round); color: var(--rose-deep); text-align: right; }
+.sweep-line.neg-text { color: #B23B3B; }
 
 .field-label { display: block; font: 500 14px/1.4 var(--round); color: var(--muted); }
 .field-label input {
@@ -724,16 +834,18 @@ function route() {
 
 
 <!-- =========================================================
-     KAASU
-     Each column is a daily budget envelope: name + a daily setpoint.
-     Per day you log what you spent; balance = setpoint − spent.
-     A column's leftover balance (if negative) is deducted from that
-     same column's setpoint the NEXT day. Any leftover that stays
-     positive after that is swept into that day's (view-only) Savings.
+     KAASU — a personal finance dashboard, not a spreadsheet.
+     Five tabs (bottom nav): Today, Transactions, Budget, Calendar,
+     Savings. Spending is logged as individual transactions, grouped
+     into budget "categories" (name + setpoint + Daily/Weekly/Monthly
+     reset). A negative balance at a period's end is deducted from
+     that category's NEXT period; a positive leftover sweeps into
+     Savings — both shown transparently on the Savings tab.
      ========================================================= -->
 <script>
 const KaasuApp = (() => {
   const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const DOW = ['S','M','T','W','T','F','S'];
 
   const pad = (n) => String(n).padStart(2, '0');
@@ -745,21 +857,50 @@ const KaasuApp = (() => {
     const v = Math.round((n + Number.EPSILON) * 100) / 100;
     return (v < 0 ? '-₹' : '₹') + Math.abs(v).toLocaleString('en-IN');
   };
+  const fmtDay = (ds) => {
+    const [y, m, d] = ds.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+  };
+  const fmtDayFull = (ds) => {
+    const [y, m, d] = ds.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  };
+  const todayStr = () => { const t = new Date(); return dateStr(t.getFullYear(), t.getMonth(), t.getDate()); };
+
+  // ---- data layer ----
+  // One transaction per purchase (date, columnId, amount, note). Older
+  // versions of Kaasu stored a single overwritable number per day per
+  // column (kaasu_entries) — migrateIfNeeded() turns each of those into
+  // one transaction, once, the first time this runs. Nothing is deleted.
+  async function migrateIfNeeded(db) {
+    const [oldEntries, txns] = await Promise.all([db.all('kaasu_entries'), db.all('kaasu_txns')]);
+    if (txns.length || !oldEntries.length) return;
+    const withSpend = oldEntries.filter((e) => e.input);
+    await Promise.all(withSpend.map((e) => db.put('kaasu_txns', {
+      id: db.uid(), date: e.date, columnId: e.columnId, amount: e.input, note: '', createdAt: e.date + 'T12:00:00',
+    })));
+  }
 
   async function loadAll(db) {
-    const [columns, entries, plans] = await Promise.all([db.all('kaasu_columns'), db.all('kaasu_entries'), db.all('kaasu_plans')]);
+    await migrateIfNeeded(db);
+    const [columns, txns, income, plans] = await Promise.all([
+      db.all('kaasu_columns'), db.all('kaasu_txns'), db.all('kaasu_income'), db.all('kaasu_plans'),
+    ]);
     columns.sort((a, b) => a.number - b.number);
-    return { columns, entries, plans };
+    txns.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    return { columns, txns, income, plans };
   }
 
   // Columns belong to the month they were created in. A column saved before
   // this existed (no monthKey) is treated as belonging to every month, so
   // nothing already on the phone disappears.
-  const columnsFor = (columns, y, m) => columns.filter((c) => !c.monthKey || c.monthKey === monthKey(y, m));
+  const columnsFor = (columns, y, m) => columns.filter((c) => !c.monthKey || c.monthKey === monthKey(y, m)).sort((a, b) => a.number - b.number);
+  const incomeFor = (income, y, m) => { const row = income.find((r) => r.id === monthKey(y, m)); return row ? row.amount : 0; };
+  const txnsForMonth = (txns, y, m) => { const mk = monthKey(y, m); return txns.filter((t) => t.date.slice(0, 7) === mk); };
 
-  function entryMap(entries) {
+  function txnMap(txns) {
     const m = {};
-    entries.forEach((e) => { m[e.date + '|' + e.columnId] = e.input; });
+    txns.forEach((t) => { const k = t.date + '|' + t.columnId; m[k] = (m[k] || 0) + t.amount; });
     return m;
   }
 
@@ -787,18 +928,22 @@ const KaasuApp = (() => {
   // down as spend is logged; a negative balance at period's end is deducted
   // from that column's setpoint for the NEXT period. Leftover that's still
   // positive when a period ends is swept into that closing day's Savings.
+  // Also records, per column, the sweep that happened at each period's last
+  // day — so the UI can show exactly why savings moved or a budget shrank.
   function computeMonth(columns, eMap, y, m) {
     const n = daysInMonth(y, m);
     const perDay = {};
     for (let d = 1; d <= n; d++) perDay[dateStr(y, m, d)] = { cols: {}, savings: 0 };
     const colTotals = {};
+    const sweeps = []; // { colId, periodEndDate, kind: 'saved'|'deficit', amount, nextSetpoint }
     let totalSavings = 0;
 
     columns.forEach((col) => {
       colTotals[col.id] = 0;
       const freq = col.frequency || 'daily';
       let carry = 0;
-      periodsFor(freq, y, m, n).forEach(([s, e]) => {
+      const periods = periodsFor(freq, y, m, n);
+      periods.forEach(([s, e], pi) => {
         const periodSetpoint = col.setpoint - carry;
         let cumulative = 0;
         for (let d = s; d <= e; d++) {
@@ -809,221 +954,579 @@ const KaasuApp = (() => {
           perDay[date].cols[col.id] = { effSetpoint: periodSetpoint, input, balance: periodSetpoint - cumulative, periodEnd: d === e };
         }
         const finalBalance = periodSetpoint - cumulative;
+        const endDate = dateStr(y, m, e);
         if (finalBalance > 0) {
-          perDay[dateStr(y, m, e)].savings += finalBalance;
+          perDay[endDate].savings += finalBalance;
           totalSavings += finalBalance;
+          sweeps.push({ colId: col.id, periodEndDate: endDate, kind: 'saved', amount: finalBalance });
+        } else if (finalBalance < 0 && pi < periods.length - 1) {
+          sweeps.push({ colId: col.id, periodEndDate: endDate, kind: 'deficit', amount: -finalBalance, nextSetpoint: col.setpoint - (-finalBalance) });
         }
         carry = finalBalance < 0 ? -finalBalance : 0;
       });
     });
 
-    return { perDay, colTotals, totalSavings };
+    return { perDay, colTotals, totalSavings, sweeps };
   }
 
   const FREQ_LABEL = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
   const FREQ_UNIT = { daily: '/day', weekly: '/week', monthly: '/month' };
 
+  // ---- small line icons for the tab bar (stroke, currentColor) ----
+  const ICON = {
+    today: '<path d="M3 10.5 10 4l7 6.5M5 9v7h10V9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    txns: '<path d="M4 5h12M4 10h12M4 15h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+    budget: '<rect x="3" y="6" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h14" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="12.5" r="1.1" fill="currentColor"/>',
+    calendar: '<rect x="3.5" y="4.5" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8h13M7 3v3M13 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+    savings: '<path d="M4 11c0-3 2.5-5 6-5s6 1.8 6 4.2c0 1-.4 1.7-1 2.3v2a1 1 0 0 1-1 1h-1.3a1 1 0 0 1-1-.8l-.1-.5a9 9 0 0 1-2.6 0l-.1.5a1 1 0 0 1-1 .8H7a1 1 0 0 1-1-1v-1.2C5 12.2 4 11.8 4 11Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="13" cy="9" r=".6" fill="currentColor"/>',
+  };
+
   function mount(el, ctx) {
     const today = new Date();
-    const state = { view: 'month', y: today.getFullYear(), m: today.getMonth(), selectedDate: null };
+    const state = { tab: 'today', y: today.getFullYear(), m: today.getMonth(), calView: 'month', selectedDate: null };
     render();
 
     async function render() {
-      const { columns, entries, plans } = await loadAll(ctx.db);
-      const eMap = entryMap(entries);
-      if (state.selectedDate) renderDay(columns, eMap);
-      else if (state.view === 'week') renderWeek(columns, eMap);
-      else if (state.view === 'year') renderYear();
-      else renderMonth(columns, eMap, plans);
+      const data = await loadAll(ctx.db);
+      const shell = tabShell(data);
+      el.innerHTML = shell;
+      wireTabBar();
+      const body = $('#kaasu-body', el);
+      if (state.tab === 'txns') renderTxns(body, data);
+      else if (state.tab === 'budget') renderBudget(body, data);
+      else if (state.tab === 'calendar') renderCalendar(body, data);
+      else if (state.tab === 'savings') renderSavings(body, data);
+      else renderToday(body, data);
     }
 
-    const toolbar = () => `<div class="kaasu-toolbar" role="tablist">
-      ${['month', 'week', 'year'].map((v) => `<button class="seg ${state.view === v ? 'active' : ''}" data-view="${v}">${v[0].toUpperCase()}${v.slice(1)}</button>`).join('')}
-    </div>`;
-
-    function wireToolbar() {
-      $('.kaasu-toolbar', el).onclick = (e) => { const b = e.target.closest('[data-view]'); if (!b) return; state.view = b.dataset.view; render(); };
-    }
-
-    function renderMonth(columns, eMap, plans) {
-      const { y, m } = state;
-      const monthColumns = columnsFor(columns, y, m);
-      const data = computeMonth(monthColumns, eMap, y, m);
-      const totalExpenses = Object.values(data.colTotals).reduce((a, b) => a + b, 0);
-      const first = new Date(y, m, 1).getDay();
-      const n = daysInMonth(y, m);
-      const todayStr = dateStr(today.getFullYear(), today.getMonth(), today.getDate());
-
-      let cells = '';
-      for (let i = 0; i < first; i++) cells += `<span class="day empty"></span>`;
-      for (let d = 1; d <= n; d++) {
-        const ds = dateStr(y, m, d);
-        cells += `<button class="day ${ds === todayStr ? 'today' : ''}" data-date="${ds}">${d}</button>`;
-      }
-
-      const plan = plans.find((p) => p.id === monthKey(y, m));
-
-      el.innerHTML = `
-        ${toolbar()}
-        <div class="kaasu-cal-head">
-          <button class="navbtn" data-nav="-1" aria-label="Previous month">‹</button>
-          <span>${MONTH_NAMES[m]} ${y}</span>
-          <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
+    function tabShell() {
+      const TABS = [
+        ['today', 'Today'], ['txns', 'Transactions'], ['budget', 'Budget'],
+        ['calendar', 'Calendar'], ['savings', 'Savings'],
+      ];
+      return `
+        <div class="kaasu-shell">
+          <div id="kaasu-body"></div>
         </div>
-        <div class="kaasu-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
-        <button class="btn ghost manage-cols-btn" data-manage>✎ Manage ${MONTH_NAMES[m]} columns</button>
-        ${monthColumns.length ? `
-        <div class="kaasu-summary">
-          <h3>${MONTH_NAMES[m]} Summary</h3>
-          <div class="summary-row"><span>Total Expenses</span><span>${fmtMoney(totalExpenses)}</span></div>
-          <div class="summary-row total"><span>Total Savings</span><span>${fmtMoney(data.totalSavings)}</span></div>
-        </div>` : `<div class="note"><p>No columns yet for ${MONTH_NAMES[m]}. Tap “Manage columns” above to add your first one.</p></div>`}
-        <div class="kaasu-sticky">
-          <div class="pin" aria-hidden="true">📌</div>
-          <textarea class="sticky-text" placeholder="${MONTH_NAMES[m]} plan…">${plan ? esc(plan.text) : ''}</textarea>
-        </div>`;
+        <nav class="tabbar" role="tablist">
+          ${TABS.map(([id, label]) => `
+            <button class="tabbtn ${state.tab === id ? 'active' : ''}" data-tab="${id}" aria-label="${label}">
+              <svg viewBox="0 0 20 20">${ICON[id]}</svg>
+              <span>${label}</span>
+            </button>`).join('')}
+        </nav>`;
+    }
 
-      wireToolbar();
-      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; shiftMonth(parseInt(b.dataset.nav, 10)); };
-      $('.kaasu-grid', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
-      $('[data-manage]', el).onclick = () => openManageColumnsSheet();
-
-      async function openManageColumnsSheet() {
-        const fresh = columnsFor((await loadAll(ctx.db)).columns, y, m);
-        const sheet = ctx.ui.sheet(`
-          <h2>${MONTH_NAMES[m]} columns</h2>
-          <p>These apply to every day in ${MONTH_NAMES[m]} ${y}.</p>
-          <div class="manage-col-list">
-            ${fresh.length ? fresh.map((c) => `
-              <div class="manage-col-row">
-                <span class="col-num">${c.number}</span>
-                <span class="manage-col-name">${esc(c.name)} <span class="col-badge">${FREQ_LABEL[c.frequency || 'daily']}</span></span>
-                <span class="manage-col-set">₹${c.setpoint}${FREQ_UNIT[c.frequency || 'daily']}</span>
-                <button class="edit-btn" data-edit="${c.id}" aria-label="Edit ${esc(c.name)}">✎</button>
-              </div>`).join('') : `<p class="muted-note">No columns yet.</p>`}
-          </div>
-          <button class="btn" data-add-new>+ Add column</button>
-          <button class="btn ghost" data-close>Close</button>`);
-        $('[data-close]', sheet).onclick = () => { ctx.ui.closeSheet(); render(); };
-        $('[data-add-new]', sheet).onclick = () => openColumnEditSheet(ctx, y, m, fresh, null, () => { openManageColumnsSheet(); render(); });
-        sheet.querySelectorAll('[data-edit]').forEach((b) => {
-          b.onclick = () => openColumnEditSheet(ctx, y, m, fresh, fresh.find((c) => c.id === b.dataset.edit), () => { openManageColumnsSheet(); render(); });
-        });
-      }
-
-      const ta = $('.sticky-text', el);
-      let saveTimer;
-      ta.oninput = () => {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => ctx.db.put('kaasu_plans', { id: monthKey(y, m), text: ta.value }), 500);
+    function wireTabBar() {
+      $('.tabbar', el).onclick = (e) => {
+        const b = e.target.closest('[data-tab]');
+        if (!b) return;
+        state.tab = b.dataset.tab;
+        state.selectedDate = null;
+        render();
       };
     }
 
+    function monthNav() {
+      return `<div class="month-nav">
+        <button class="navbtn sm" data-mprev aria-label="Previous month">‹</button>
+        <span>${MONTH_NAMES[state.m]} ${state.y}</span>
+        <button class="navbtn sm" data-mnext aria-label="Next month">›</button>
+      </div>`;
+    }
+    function wireMonthNav(scope) {
+      $('[data-mprev]', scope).onclick = () => { shiftMonth(-1); };
+      $('[data-mnext]', scope).onclick = () => { shiftMonth(1); };
+    }
     function shiftMonth(delta) {
       let m = state.m + delta, y = state.y;
       if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; }
       state.m = m; state.y = y; render();
     }
 
-    function renderWeek(columns, eMap) {
+    // ---- insights: pick the single most useful line, in priority order ----
+    function buildInsight(columns, data, y, m) {
+      const n = daysInMonth(y, m);
+      const dayNum = (y === today.getFullYear() && m === today.getMonth()) ? today.getDate() : n;
+      for (const col of columns) {
+        if ((col.frequency || 'daily') !== 'monthly') continue;
+        const spent = data.colTotals[col.id] || 0;
+        if (spent <= 0 || dayNum < 4) continue;
+        const projected = (spent / dayNum) * n;
+        if (projected > col.setpoint * 1.05) return `At this pace, ${col.name} may go over budget this month.`;
+      }
+      for (const col of columns) {
+        const spent = data.colTotals[col.id] || 0;
+        if (col.setpoint > 0 && spent / col.setpoint >= 0.8 && spent / col.setpoint < 1) {
+          return `You've used ${Math.round((spent / col.setpoint) * 100)}% of your ${col.name} budget.`;
+        }
+      }
+      const sorted = columns.map((c) => ({ c, spent: data.colTotals[c.id] || 0 })).filter((x) => x.spent > 0).sort((a, b) => b.spent - a.spent);
+      if (sorted.length) return `Your biggest expense this month is ${sorted[0].c.name} at ${fmtMoney(sorted[0].spent)}.`;
+      const totalSpent = Object.values(data.colTotals).reduce((a, b) => a + b, 0);
+      if (totalSpent > 0) return `Average daily spending this month: ${fmtMoney(totalSpent / dayNum)}.`;
+      return null;
+    }
+
+    // ================= TODAY =================
+    function renderToday(body, data) {
+      const { columns: allColumns, txns, income, plans } = data;
+      const columns = columnsFor(allColumns, state.y, state.m);
+      const eMap = txnMap(txnsForMonth(txns, state.y, state.m));
+      const calc = computeMonth(columns, eMap, state.y, state.m);
+      const isCurrentMonth = state.y === today.getFullYear() && state.m === today.getMonth();
+      const ds = isCurrentMonth ? todayStr() : dateStr(state.y, state.m, 1);
+      const dayData = calc.perDay[ds] || { cols: {}, savings: 0 };
+
+      const totalSpent = Object.values(calc.colTotals).reduce((a, b) => a + b, 0);
+      const inc = incomeFor(income, state.y, state.m);
+      const remaining = inc - totalSpent;
+      const todaySpent = Object.values(dayData.cols).reduce((s, c) => s + c.input, 0);
+      const safeToday = columns.reduce((s, c) => s + Math.max(0, (dayData.cols[c.id] ? dayData.cols[c.id].balance : c.setpoint)), 0);
+
+      const topCats = columns
+        .map((c) => ({ c, spent: calc.colTotals[c.id] || 0 }))
+        .sort((a, b) => b.spent - a.spent)
+        .slice(0, 3);
+
+      const insight = buildInsight(columns, calc, state.y, state.m);
+      const plan = plans.find((p) => p.id === monthKey(state.y, state.m));
+
+      body.innerHTML = `
+        ${monthNav()}
+        <div class="hero">
+          ${inc > 0 ? `<div class="hero-row"><span class="hero-label">Income</span><span class="hero-val">${fmtMoney(inc)}</span></div>` : ''}
+          <div class="hero-row"><span class="hero-label">Spent</span><span class="hero-val">${fmtMoney(totalSpent)}</span></div>
+          ${inc > 0 ? `<div class="hero-row"><span class="hero-label">Remaining</span><span class="hero-val ${remaining < 0 ? 'neg' : ''}">${fmtMoney(remaining)}</span></div>` : ''}
+          <div class="hero-row"><span class="hero-label">Saved</span><span class="hero-val accent">${fmtMoney(calc.totalSavings)}</span></div>
+        </div>
+
+        <div class="safe-today">
+          <div><span class="safe-label">${isCurrentMonth ? "Today's spend" : 'Spend that day'}</span><span class="safe-val">${fmtMoney(todaySpent)}</span></div>
+          <div class="safe-div"></div>
+          <div><span class="safe-label">Safe to spend</span><span class="safe-val accent">${fmtMoney(safeToday)}</span></div>
+        </div>
+
+        ${insight ? `<p class="insight">${insight}</p>` : ''}
+
+        ${columns.length ? `
+        <div class="section-head"><h3>Top categories</h3><button class="link-sm" data-goto="budget">All budgets →</button></div>
+        <div class="cat-list">
+          ${topCats.map(({ c, spent }) => catProgressRow(c, spent, (dayData.cols[c.id] ? dayData.cols[c.id].balance : c.setpoint))).join('')}
+        </div>` : `<div class="note"><p>No categories yet. Set up your budget to start tracking.</p><button class="btn ghost" data-goto="budget" style="margin-top:12px">Set up Budget</button></div>`}
+
+        <details class="plan-fold">
+          <summary>📌 ${MONTH_NAMES[state.m]} plan</summary>
+          <textarea class="sticky-text plan-text" placeholder="What's the plan this month…">${plan ? esc(plan.text) : ''}</textarea>
+        </details>
+      `;
+      wireMonthNav(body);
+      body.querySelectorAll('[data-goto]').forEach((b) => { b.onclick = () => { state.tab = b.dataset.goto; render(); }; });
+      const ta = $('.plan-text', body);
+      if (ta) {
+        let t;
+        ta.oninput = () => { clearTimeout(t); t = setTimeout(() => ctx.db.put('kaasu_plans', { id: monthKey(state.y, state.m), text: ta.value }), 500); };
+      }
+      mountFab(body);
+    }
+
+    function catProgressRow(col, spent, balance) {
+      const pct = col.setpoint > 0 ? Math.min(100, Math.round((spent / col.setpoint) * 100)) : 0;
+      const over = balance < 0;
+      return `<div class="cat-row">
+        <div class="cat-row-top">
+          <span class="cat-name">${esc(col.name)}</span>
+          <span class="cat-amt ${over ? 'neg' : ''}">${fmtMoney(spent)} <span class="cat-of">/ ${fmtMoney(col.setpoint)}</span></span>
+        </div>
+        <div class="progress-track"><div class="progress-fill ${over ? 'over' : ''}" style="width:${pct}%"></div></div>
+      </div>`;
+    }
+
+    function mountFab(scope) {
+      if (!$('.fab', scope)) {
+        const fab = document.createElement('button');
+        fab.className = 'fab'; fab.setAttribute('aria-label', 'Add expense');
+        fab.innerHTML = '+';
+        scope.appendChild(fab);
+        fab.onclick = () => openAddTxnSheet();
+      }
+    }
+
+    // ================= TRANSACTIONS =================
+    function renderTxns(body, data) {
+      const { columns: allColumns, txns } = data;
+      const colById = Object.fromEntries(allColumns.map((c) => [c.id, c]));
+      const monthTxns = txnsForMonth(txns, state.y, state.m);
+
+      const groups = {};
+      monthTxns.forEach((t) => { (groups[t.date] = groups[t.date] || []).push(t); });
+      const days = Object.keys(groups).sort((a, b) => (a < b ? 1 : -1));
+
+      body.innerHTML = `
+        ${monthNav()}
+        ${days.length ? days.map((ds) => `
+          <div class="txn-day-group">
+            <div class="txn-day-label">${fmtDay(ds)}</div>
+            ${groups[ds].map((t) => {
+              const col = colById[t.columnId];
+              return `<button class="txn-row" data-edit-txn="${t.id}">
+                <span class="txn-cat">${esc(col ? col.name : '—')}</span>
+                ${t.note ? `<span class="txn-note">${esc(t.note)}</span>` : ''}
+                <span class="txn-amt">-${fmtMoney(t.amount)}</span>
+              </button>`;
+            }).join('')}
+          </div>`).join('') : `
+          <div class="note"><p>No spending recorded yet.</p><p style="margin-top:4px">Your money story starts here.</p></div>`}
+      `;
+      wireMonthNav(body);
+      body.querySelectorAll('[data-edit-txn]').forEach((b) => {
+        b.onclick = () => openEditTxnSheet(monthTxns.find((t) => t.id === b.dataset.editTxn), colById);
+      });
+      mountFab(body);
+    }
+
+    function openEditTxnSheet(txn, colById) {
+      const col = colById[txn.columnId];
+      const sheet = ctx.ui.sheet(`
+        <h2>${fmtDayFull(txn.date)}</h2>
+        <p>${esc(col ? col.name : '—')} — ${fmtMoney(txn.amount)}${txn.note ? ' · ' + esc(txn.note) : ''}</p>
+        <button class="btn ghost" data-edit>Edit amount / note</button>
+        <button class="btn ghost" data-delete>Delete transaction</button>
+        <button class="btn ghost" data-cancel>Close</button>`);
+      $('[data-cancel]', sheet).onclick = () => ctx.ui.closeSheet();
+      $('[data-edit]', sheet).onclick = () => openAddTxnSheet(txn);
+      $('[data-delete]', sheet).onclick = async () => {
+        await ctx.db.del('kaasu_txns', txn.id);
+        ctx.ui.closeSheet();
+        render();
+        ctx.ui.toast('Transaction deleted');
+      };
+    }
+
+    // ---- quick add / edit expense ----
+    function openAddTxnSheet(existing, presetDate) {
+      const isEdit = !!existing;
+      loadAll(ctx.db).then((data) => {
+        const cols = columnsFor(data.columns, state.y, state.m);
+        if (!cols.length) { ctx.ui.closeSheet(); ctx.ui.toast('Add a budget category first'); state.tab = 'budget'; render(); return; }
+        const recentIds = [...new Set(data.txns.map((t) => t.columnId))].filter((id) => cols.some((c) => c.id === id)).slice(0, 4);
+        let chosenCol = isEdit ? existing.columnId : (recentIds[0] || cols[0].id);
+        const dateVal = isEdit ? existing.date : (presetDate || (state.y === today.getFullYear() && state.m === today.getMonth() ? todayStr() : dateStr(state.y, state.m, 1)));
+
+        const sheet = ctx.ui.sheet(`
+          <h2>${isEdit ? 'Edit expense' : 'Add expense'}</h2>
+          <label class="field-label">Amount (₹)<input id="txn-amt-in" type="number" inputmode="decimal" value="${isEdit ? existing.amount : ''}" placeholder="0" autofocus></label>
+          <label class="field-label">Category</label>
+          <div class="chip-row" id="cat-chips">
+            ${cols.map((c) => `<button type="button" class="chip ${c.id === chosenCol ? 'active' : ''}" data-cat="${c.id}">${esc(c.name)}</button>`).join('')}
+          </div>
+          <label class="field-label">Date<input id="txn-date-in" type="date" value="${dateVal}"></label>
+          <label class="field-label">Note (optional)<input id="txn-note-in" type="text" value="${isEdit ? esc(existing.note || '') : ''}" placeholder="e.g. lunch with friends" maxlength="60"></label>
+          <button class="btn" data-save>Save</button>
+          <button class="btn ghost" data-cancel>Cancel</button>`);
+        $('#txn-amt-in', sheet).focus();
+        sheet.querySelectorAll('[data-cat]').forEach((b) => {
+          b.onclick = () => { chosenCol = b.dataset.cat; sheet.querySelectorAll('[data-cat]').forEach((x) => x.classList.toggle('active', x === b)); };
+        });
+        $('[data-cancel]', sheet).onclick = () => ctx.ui.closeSheet();
+        $('[data-save]', sheet).onclick = async () => {
+          const amount = parseFloat($('#txn-amt-in', sheet).value);
+          const date = $('#txn-date-in', sheet).value;
+          const note = $('#txn-note-in', sheet).value.trim();
+          if (isNaN(amount) || amount <= 0) { ctx.ui.toast('Enter an amount'); return; }
+          if (!date) { ctx.ui.toast('Pick a date'); return; }
+          const row = { id: isEdit ? existing.id : ctx.db.uid(), date, columnId: chosenCol, amount, note, createdAt: isEdit ? existing.createdAt : new Date().toISOString() };
+          await ctx.db.put('kaasu_txns', row);
+          ctx.ui.closeSheet();
+          render();
+          if (!isEdit) ctx.ui.toast('Expense added');
+        };
+      });
+    }
+
+    // ================= BUDGET =================
+    function renderBudget(body, data) {
+      const { columns: allColumns, income } = data;
+      const columns = columnsFor(allColumns, state.y, state.m);
+      const prevM = state.m === 0 ? 11 : state.m - 1, prevY = state.m === 0 ? state.y - 1 : state.y;
+      const prevColumns = columnsFor(allColumns, prevY, prevM);
+      const inc = incomeFor(income, state.y, state.m);
+
+      body.innerHTML = `
+        ${monthNav()}
+        <label class="field-label income-field">Income this month (₹)
+          <input id="income-in" type="number" inputmode="decimal" value="${inc || ''}" placeholder="optional">
+        </label>
+
+        <div class="section-head"><h3>Categories</h3></div>
+        ${columns.length ? `<div class="budget-list">
+          ${columns.map((c, i) => `
+            <div class="budget-row">
+              <div class="reorder-col">
+                <button class="reorder-btn" data-up="${c.id}" ${i === 0 ? 'disabled' : ''} aria-label="Move up">▲</button>
+                <button class="reorder-btn" data-down="${c.id}" ${i === columns.length - 1 ? 'disabled' : ''} aria-label="Move down">▼</button>
+              </div>
+              <div class="budget-row-main">
+                <span class="budget-row-name">${esc(c.name)}</span>
+                <span class="budget-row-amt">${fmtMoney(c.setpoint)} <span class="col-badge">${FREQ_LABEL[c.frequency || 'daily']}</span></span>
+              </div>
+              <button class="edit-btn" data-edit="${c.id}" aria-label="Edit ${esc(c.name)}">✎</button>
+            </div>`).join('')}
+        </div>` : `<div class="note"><p>No categories for ${MONTH_NAMES[state.m]} yet.</p></div>`}
+
+        <button class="btn ghost" data-add-new>+ Add category</button>
+        ${!columns.length && prevColumns.length ? `<button class="btn ghost" data-copy>Copy ${MONTH_SHORT[prevM]}'s budget</button>` : ''}
+      `;
+      wireMonthNav(body);
+
+      const incomeInput = $('#income-in', body);
+      let incT;
+      incomeInput.oninput = () => {
+        clearTimeout(incT);
+        incT = setTimeout(async () => {
+          const val = parseFloat(incomeInput.value);
+          await ctx.db.put('kaasu_income', { id: monthKey(state.y, state.m), amount: isNaN(val) ? 0 : val });
+        }, 500);
+      };
+
+      const backFromCol = () => { ctx.ui.closeSheet(); render(); };
+      $('[data-add-new]', body).onclick = () => openColumnEditSheet(ctx, state.y, state.m, columns, null, backFromCol);
+      body.querySelectorAll('[data-edit]').forEach((b) => {
+        b.onclick = () => openColumnEditSheet(ctx, state.y, state.m, columns, columns.find((c) => c.id === b.dataset.edit), backFromCol);
+      });
+      body.querySelectorAll('[data-up]').forEach((b) => { b.onclick = () => reorder(columns, b.dataset.up, -1); });
+      body.querySelectorAll('[data-down]').forEach((b) => { b.onclick = () => reorder(columns, b.dataset.down, 1); });
+      const copyBtn = $('[data-copy]', body);
+      if (copyBtn) copyBtn.onclick = () => copyPrevBudget(prevColumns, columns);
+    }
+
+    async function reorder(columns, id, dir) {
+      const i = columns.findIndex((c) => c.id === id);
+      const j = i + dir;
+      if (j < 0 || j >= columns.length) return;
+      const a = columns[i], b = columns[j];
+      await Promise.all([
+        ctx.db.put('kaasu_columns', { ...a, number: b.number }),
+        ctx.db.put('kaasu_columns', { ...b, number: a.number }),
+      ]);
+      render();
+    }
+
+    async function copyPrevBudget(prevColumns, existingColumns) {
+      const existingNames = new Set(existingColumns.map((c) => c.name.toLowerCase()));
+      const toCopy = prevColumns.filter((c) => !existingNames.has(c.name.toLowerCase()));
+      let next = existingColumns.length ? Math.max(...existingColumns.map((c) => c.number)) + 1 : 1;
+      await Promise.all(toCopy.map((c) => ctx.db.put('kaasu_columns', {
+        number: next++, name: c.name, setpoint: c.setpoint, frequency: c.frequency || 'daily', monthKey: monthKey(state.y, state.m),
+      })));
+      render();
+      ctx.ui.toast(`Copied ${toCopy.length} categor${toCopy.length === 1 ? 'y' : 'ies'}`);
+    }
+
+    // ================= CALENDAR =================
+    function renderCalendar(body, data) {
+      if (state.selectedDate) { renderDayDetail(body, data); return; }
+      if (state.calView === 'week') { renderWeekView(body, data); return; }
+      if (state.calView === 'year') { renderYearView(body); return; }
+      renderMonthView(body, data);
+    }
+
+    function calToolbar() {
+      return `<div class="kaasu-toolbar" role="tablist">
+        ${['month', 'week', 'year'].map((v) => `<button class="seg ${state.calView === v ? 'active' : ''}" data-calview="${v}">${v[0].toUpperCase()}${v.slice(1)}</button>`).join('')}
+      </div>`;
+    }
+    function wireCalToolbar(scope) {
+      $('.kaasu-toolbar', scope).onclick = (e) => { const b = e.target.closest('[data-calview]'); if (!b) return; state.calView = b.dataset.calview; render(); };
+    }
+
+    function renderMonthView(body, data) {
+      const { columns: allColumns, txns, income } = data;
+      const columns = columnsFor(allColumns, state.y, state.m);
+      const eMap = txnMap(txnsForMonth(txns, state.y, state.m));
+      const calc = computeMonth(columns, eMap, state.y, state.m);
+      const totalExpenses = Object.values(calc.colTotals).reduce((a, b) => a + b, 0);
+      const inc = incomeFor(income, state.y, state.m);
+      const n = daysInMonth(state.y, state.m);
+      const first = new Date(state.y, state.m, 1).getDay();
+      const todayDs = todayStr();
+
+      const daySpend = {};
+      let maxSpend = 0;
+      for (let d = 1; d <= n; d++) {
+        const ds = dateStr(state.y, state.m, d);
+        const s = calc.perDay[ds] ? Object.values(calc.perDay[ds].cols).reduce((a, c) => a + c.input, 0) : 0;
+        daySpend[ds] = s;
+        if (s > maxSpend) maxSpend = s;
+      }
+
+      let cells = '';
+      for (let i = 0; i < first; i++) cells += `<span class="day empty"></span>`;
+      for (let d = 1; d <= n; d++) {
+        const ds = dateStr(state.y, state.m, d);
+        const s = daySpend[ds];
+        const ratio = maxSpend ? s / maxSpend : 0;
+        const lvl = s === 0 ? 0 : ratio > .66 ? 3 : ratio > .33 ? 2 : 1;
+        cells += `<button class="day spend-lvl-${lvl} ${ds === todayDs ? 'today' : ''}" data-date="${ds}">${d}</button>`;
+      }
+
+      const sorted = columns.map((c) => ({ c, spent: calc.colTotals[c.id] || 0 })).sort((a, b) => b.spent - a.spent);
+
+      body.innerHTML = `
+        ${calToolbar()}
+        <div class="kaasu-cal-head">
+          <button class="navbtn" data-nav="-1" aria-label="Previous month">‹</button>
+          <span>${MONTH_NAMES[state.m]} ${state.y}</span>
+          <button class="navbtn" data-nav="1" aria-label="Next month">›</button>
+        </div>
+        <div class="kaasu-grid">${DOW.map((d) => `<span class="dow">${d}</span>`).join('')}${cells}</div>
+        <div class="kaasu-summary">
+          <h3>${MONTH_NAMES[state.m]} overview</h3>
+          ${inc > 0 ? `<div class="summary-row"><span>Income</span><span>${fmtMoney(inc)}</span></div>` : ''}
+          <div class="summary-row"><span>Expenses</span><span>${fmtMoney(totalExpenses)}</span></div>
+          ${inc > 0 ? `<div class="summary-row"><span>Budget remaining</span><span class="${inc - totalExpenses < 0 ? 'neg-text' : ''}">${fmtMoney(inc - totalExpenses)}</span></div>` : ''}
+          <div class="summary-row total"><span>Savings</span><span>${fmtMoney(calc.totalSavings)}</span></div>
+        </div>
+        ${sorted.length ? `<div class="kaasu-summary">
+          <h3>Category breakdown</h3>
+          ${sorted.map(({ c, spent }) => `<div class="summary-row"><span>${esc(c.name)}</span><span>${fmtMoney(spent)}</span></div>`).join('')}
+        </div>` : ''}
+      `;
+      wireCalToolbar(body);
+      $('.kaasu-cal-head', body).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; shiftMonth(parseInt(b.dataset.nav, 10)); };
+      $('.kaasu-grid', body).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
+    }
+
+    function renderWeekView(body, data) {
+      const { columns: allColumns, txns } = data;
       const day0 = new Date(today); day0.setDate(today.getDate() - today.getDay());
       let rows = '';
       for (let i = 0; i < 7; i++) {
         const d = new Date(day0); d.setDate(day0.getDate() + i);
         const ds = dateStr(d.getFullYear(), d.getMonth(), d.getDate());
-        const data = computeMonth(columnsFor(columns, d.getFullYear(), d.getMonth()), eMap, d.getFullYear(), d.getMonth());
-        const day = data.perDay[ds];
+        const columns = columnsFor(allColumns, d.getFullYear(), d.getMonth());
+        const eMap = txnMap(txnsForMonth(txns, d.getFullYear(), d.getMonth()));
+        const calc = computeMonth(columns, eMap, d.getFullYear(), d.getMonth());
+        const day = calc.perDay[ds];
         const spent = day ? Object.values(day.cols).reduce((s, c) => s + c.input, 0) : 0;
         rows += `<button class="week-row" data-date="${ds}">
           <span class="wd">${d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
           <span class="wd-amt">${fmtMoney(spent)}</span>
         </button>`;
       }
-      el.innerHTML = `${toolbar()}<div class="kaasu-week-list">${rows}</div>`;
-      wireToolbar();
-      $('.kaasu-week-list', el).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
+      body.innerHTML = `${calToolbar()}<div class="kaasu-week-list">${rows}</div>`;
+      wireCalToolbar(body);
+      $('.kaasu-week-list', body).onclick = (e) => { const b = e.target.closest('[data-date]'); if (!b) return; state.selectedDate = b.dataset.date; render(); };
     }
 
-    function renderYear() {
+    function renderYearView(body) {
       const y = state.y;
       const cells = MONTH_NAMES.map((name, m) => `<button class="year-month" data-m="${m}">${name.slice(0, 3)}</button>`).join('');
-      el.innerHTML = `${toolbar()}
+      body.innerHTML = `${calToolbar()}
         <div class="kaasu-cal-head">
           <button class="navbtn" data-nav="-1" aria-label="Previous year">‹</button>
           <span>${y}</span>
           <button class="navbtn" data-nav="1" aria-label="Next year">›</button>
         </div>
         <div class="kaasu-year-grid">${cells}</div>`;
-      wireToolbar();
-      $('.kaasu-cal-head', el).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; state.y += parseInt(b.dataset.nav, 10); render(); };
-      $('.kaasu-year-grid', el).onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; state.m = parseInt(b.dataset.m, 10); state.view = 'month'; render(); };
+      wireCalToolbar(body);
+      $('.kaasu-cal-head', body).onclick = (e) => { const b = e.target.closest('[data-nav]'); if (!b) return; state.y += parseInt(b.dataset.nav, 10); render(); };
+      $('.kaasu-year-grid', body).onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; state.m = parseInt(b.dataset.m, 10); state.calView = 'month'; render(); };
     }
 
-    function renderDay(columns, eMap) {
+    function renderDayDetail(body, data) {
       const ds = state.selectedDate;
       const [y, m, d] = ds.split('-').map(Number);
-      const monthColumns = columnsFor(columns, y, m - 1);
-      const data = computeMonth(monthColumns, eMap, y, m - 1);
-      const day = data.perDay[ds];
-      const label = new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const colById = Object.fromEntries(data.columns.map((c) => [c.id, c]));
+      const dayTxns = data.txns.filter((t) => t.date === ds);
+      const total = dayTxns.reduce((s, t) => s + t.amount, 0);
 
-      const rows = monthColumns.map((col) => {
-        const c = day.cols[col.id];
-        const neg = c.balance < 0;
-        const freq = col.frequency || 'daily';
-        return `<div class="col-row">
-          <div class="col-head">
-            <span class="col-num">${col.number}</span>
-            <span class="col-name">${esc(col.name)}</span>
-            <span class="col-badge">${FREQ_LABEL[freq]}</span>
-            <button class="edit-btn" data-edit="${col.id}" aria-label="Edit ${esc(col.name)}">✎</button>
-          </div>
-          <div class="col-fields">
-            <label class="col-input-wrap">
-              <span class="unit">₹</span>
-              <input type="number" inputmode="decimal" class="col-input" data-input="${col.id}" value="${c.input || ''}" placeholder="0">
-            </label>
-            <div class="col-balance ${neg ? 'neg' : ''}">${fmtMoney(c.balance)}</div>
-          </div>
-        </div>`;
-      }).join('');
-
-      el.innerHTML = `
+      body.innerHTML = `
         <button class="back-link" data-back>‹ ${MONTH_NAMES[m - 1]} ${y}</button>
-        <div class="day-title">${label}</div>
-        ${monthColumns.length ? `
-        <div class="col-list">${rows}</div>
-        <div class="savings-row"><span>Savings</span><span>${fmtMoney(day.savings)}</span></div>` : `<div class="note"><p>No columns yet this month. Add one to start tracking ${MONTH_NAMES[m - 1]}.</p></div>`}
-        <button class="btn ghost add-col-btn" data-add>+ Add column for ${MONTH_NAMES[m - 1]}</button>`;
+        <div class="day-title">${fmtDayFull(ds)}</div>
+        <div class="hero" style="margin-bottom:18px"><div class="hero-row"><span class="hero-label">Spent that day</span><span class="hero-val">${fmtMoney(total)}</span></div></div>
+        ${dayTxns.length ? `<div class="txn-day-group">
+          ${dayTxns.map((t) => {
+            const col = colById[t.columnId];
+            return `<button class="txn-row" data-edit-txn="${t.id}">
+              <span class="txn-cat">${esc(col ? col.name : '—')}</span>
+              ${t.note ? `<span class="txn-note">${esc(t.note)}</span>` : ''}
+              <span class="txn-amt">-${fmtMoney(t.amount)}</span>
+            </button>`;
+          }).join('')}
+        </div>` : `<div class="note"><p>Nothing logged this day.</p></div>`}
+        <button class="btn ghost" data-add-here>+ Add expense for this day</button>
+      `;
+      $('[data-back]', body).onclick = () => { state.selectedDate = null; render(); };
+      body.querySelectorAll('[data-edit-txn]').forEach((b) => { b.onclick = () => openEditTxnSheet(dayTxns.find((t) => t.id === b.dataset.editTxn), colById); });
+      $('[data-add-here]', body).onclick = () => openAddTxnSheet(null, ds);
+    }
 
-      const backToDay = () => { ctx.ui.closeSheet(); render(); };
-      $('[data-back]', el).onclick = () => { state.selectedDate = null; render(); };
-      $('[data-add]', el).onclick = () => openColumnEditSheet(ctx, y, m - 1, monthColumns, null, backToDay);
-      el.querySelectorAll('[data-edit]').forEach((b) => {
-        b.onclick = () => openColumnEditSheet(ctx, y, m - 1, monthColumns, monthColumns.find((c) => c.id === b.dataset.edit), backToDay);
+    // ================= SAVINGS =================
+    async function renderSavings(body, data) {
+      const { columns: allColumns, txns } = data;
+      const columns = columnsFor(allColumns, state.y, state.m);
+      const eMap = txnMap(txnsForMonth(txns, state.y, state.m));
+      const calc = computeMonth(columns, eMap, state.y, state.m);
+
+      let yearTotal = 0;
+      const monthRows = [];
+      for (let mi = 11; mi >= 0; mi--) {
+        const mCols = columnsFor(allColumns, state.y, mi);
+        if (!mCols.length) continue;
+        const mEmap = txnMap(txnsForMonth(txns, state.y, mi));
+        const mCalc = computeMonth(mCols, mEmap, state.y, mi);
+        yearTotal += mCalc.totalSavings;
+        monthRows.push({ m: mi, total: mCalc.totalSavings });
+      }
+
+      const colById = Object.fromEntries(columns.map((c) => [c.id, c]));
+      const thisMonthSweeps = calc.sweeps.filter((s) => s.periodEndDate.slice(0, 7) === monthKey(state.y, state.m));
+
+      // A daily column sweeps once a day — 31 rows for one category would be
+      // noise, not clarity. Saved amounts are totalled per category instead;
+      // deficits (rarer, more worth flagging) are still shown individually.
+      const savedByCol = {};
+      const deficits = [];
+      thisMonthSweeps.forEach((s) => {
+        if (s.kind === 'saved') savedByCol[s.colId] = (savedByCol[s.colId] || 0) + s.amount;
+        else deficits.push(s);
       });
-      el.querySelectorAll('[data-input]').forEach((inp) => {
-        let t;
-        inp.oninput = () => {
-          clearTimeout(t);
-          t = setTimeout(async () => {
-            const val = parseFloat(inp.value);
-            await ctx.db.put('kaasu_entries', { id: ds + '|' + inp.dataset.input, date: ds, columnId: inp.dataset.input, input: isNaN(val) ? 0 : val });
-            render();
-          }, 450);
-        };
-      });
+      const savedRows = Object.entries(savedByCol).map(([colId, amount]) => ({ name: colById[colId] ? colById[colId].name : '—', amount }));
+      const recentDeficits = deficits.slice(-5).reverse();
+
+      body.innerHTML = `
+        ${monthNav()}
+        <div class="hero">
+          <div class="hero-row"><span class="hero-label">${MONTH_NAMES[state.m]}</span><span class="hero-val accent">${fmtMoney(calc.totalSavings)}</span></div>
+          <div class="hero-row"><span class="hero-label">${state.y}</span><span class="hero-val accent">${fmtMoney(yearTotal)}</span></div>
+        </div>
+
+        ${savedRows.length || recentDeficits.length ? `
+        <div class="section-head"><h3>Why it moved</h3></div>
+        <div class="sweep-list">
+          ${savedRows.map(({ name, amount }) => `<div class="sweep-row"><span>${esc(name)}</span><span class="sweep-line">${fmtMoney(amount)} → Savings</span></div>`).join('')}
+          ${recentDeficits.map((s) => { const col = colById[s.colId]; return `<div class="sweep-row"><span>${esc(col ? col.name : '—')}</span><span class="sweep-line neg-text">−${fmtMoney(s.amount)} over → next budget ${fmtMoney(s.nextSetpoint)}</span></div>`; }).join('')}
+          ${deficits.length > 5 ? `<p class="muted-note">+${deficits.length - 5} more over-budget period${deficits.length - 5 === 1 ? '' : 's'} this month</p>` : ''}
+        </div>` : ''}
+
+        ${monthRows.length ? `
+        <div class="section-head"><h3>History</h3></div>
+        <div class="manage-col-list">
+          ${monthRows.map(({ m, total }) => `<div class="manage-col-row"><span class="manage-col-name">${MONTH_NAMES[m]}</span><span class="manage-col-set">${fmtMoney(total)}</span></div>`).join('')}
+        </div>` : `<div class="note"><p>Nothing saved yet.</p><p style="margin-top:4px">Even ₹10 counts.</p></div>`}
+      `;
+      wireMonthNav(body);
     }
   }
 
-  // Shared name/setpoint editor for a column — used both from a day page and
-  // from "Manage columns" at the month level. onBack() runs after save,
-  // delete, or cancel, so the caller decides what to show next.
+  // Shared name/setpoint/frequency editor for a budget category — used from
+  // the Budget tab. onBack() runs after save, delete, or cancel.
   function openColumnEditSheet(ctx, y, mZero, monthColumnsSnapshot, existing, onBack) {
     const isEdit = !!existing;
     const freq0 = isEdit ? (existing.frequency || 'daily') : 'daily';
     const sheet = ctx.ui.sheet(`
-      <h2>${isEdit ? 'Edit column' : 'New column'}</h2>
+      <h2>${isEdit ? 'Edit category' : 'New category'}</h2>
       <label class="field-label">Name<input id="col-name-in" type="text" value="${isEdit ? esc(existing.name) : ''}" placeholder="e.g. Food" maxlength="24"></label>
       <div class="field-label">Resets
         <div class="freq-switch">
@@ -1034,7 +1537,7 @@ const KaasuApp = (() => {
       </div>
       <label class="field-label" id="set-label">${FREQ_LABEL[freq0]} setpoint (₹)<input id="col-set-in" type="number" inputmode="decimal" value="${isEdit ? existing.setpoint : ''}" placeholder="e.g. 300"></label>
       <button class="btn" data-save>Save</button>
-      ${isEdit ? `<button class="btn ghost" data-delete>Delete column</button>` : ''}
+      ${isEdit ? `<button class="btn ghost" data-delete>Delete category</button>` : ''}
       <button class="btn ghost" data-cancel>Cancel</button>`);
     let freq = freq0;
     $('#col-name-in', sheet).focus();
@@ -1049,7 +1552,7 @@ const KaasuApp = (() => {
     $('[data-save]', sheet).onclick = async () => {
       const name = $('#col-name-in', sheet).value.trim();
       const setpoint = parseFloat($('#col-set-in', sheet).value);
-      if (!name) { ctx.ui.toast('Give the column a name'); return; }
+      if (!name) { ctx.ui.toast('Give the category a name'); return; }
       if (isNaN(setpoint) || setpoint < 0) { ctx.ui.toast('Enter a valid setpoint'); return; }
       if (isEdit) await ctx.db.put('kaasu_columns', { ...existing, name, setpoint, frequency: freq });
       else {
@@ -1060,11 +1563,11 @@ const KaasuApp = (() => {
     };
     if (isEdit) {
       $('[data-delete]', sheet).onclick = async () => {
-        const ok = await ctx.ui.confirm('Delete this column?', `“${esc(existing.name)}” and every day\u2019s entry for it will be removed. This can\u2019t be undone.`, 'Delete');
+        const ok = await ctx.ui.confirm('Delete this category?', `“${esc(existing.name)}” and every logged expense in it will be removed. This can\u2019t be undone.`, 'Delete');
         if (!ok) return;
         await ctx.db.del('kaasu_columns', existing.id);
-        const all = await ctx.db.all('kaasu_entries');
-        await Promise.all(all.filter((e) => e.columnId === existing.id).map((e) => ctx.db.del('kaasu_entries', e.id)));
+        const allTxns = await ctx.db.all('kaasu_txns');
+        await Promise.all(allTxns.filter((t) => t.columnId === existing.id).map((t) => ctx.db.del('kaasu_txns', t.id)));
         onBack();
       };
     }
@@ -1300,7 +1803,7 @@ const HealthApp = (() => {
 <script>
 registerApp({
   id: 'kaasu', name: 'Kaasu', icon: '💰', tint: '#FFF0E9',
-  stores: ['kaasu_columns', 'kaasu_entries', 'kaasu_plans'],
+  stores: ['kaasu_columns', 'kaasu_entries', 'kaasu_txns', 'kaasu_income', 'kaasu_plans'],
   mount: (el, ctx) => KaasuApp.mount(el, ctx)
 });
 
